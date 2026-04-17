@@ -643,10 +643,20 @@ let state=JSON.parse(JSON.stringify(DEF));
 try{const s=localStorage.getItem('arukizukan3');if(s){const p=JSON.parse(s);state={...DEF,...p,settings:{...DEF.settings,...(p.settings||{})}}; }}catch(e){}
 function save(){try{localStorage.setItem('arukizukan3',JSON.stringify(state));}catch(e){}}
 
-// ======= DATE =======
-function today(){return new Date().toISOString().slice(0,10);}
-function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
-function loginWindowDate(){const n=new Date();if(n.getHours()<7){const p=new Date(n);p.setDate(p.getDate()-1);return p.toISOString().slice(0,10)+'_eve';}return n.toISOString().slice(0,10);}
+// ======= DATE (ローカル時刻ベース — toISOString はUTCなので使わない) =======
+function localDateStr(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function today(){return localDateStr(new Date());}
+function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return localDateStr(d);}
+function loginWindowDate(){
+  const n=new Date();
+  if(n.getHours()<7){const p=new Date(n);p.setDate(p.getDate()-1);return localDateStr(p)+'_eve';}
+  return localDateStr(n);
+}
 function fmtDate(iso){const[,m,d]=iso.split('-');return `${m}/${d}`;}
 function fmtDateFull(iso){const[y,m,d]=iso.split('-');return `${y}年${m}月${d}日`;}
 
@@ -691,8 +701,13 @@ function closeSS(){
 
 // ======= LOGIN =======
 function checkLogin(){
-  const lwd=loginWindowDate();const done=state.loginDate===lwd;
-  // すでにログイン済みならログイン画面をスキップしてそのままホームへ
+  const lwd = loginWindowDate();
+  // ログインウィンドウが変わっていたらフラグリセット（毎朝7:00以降に初回起動時）
+  if(state.loginDate && state.loginDate !== lwd){
+    state.loginDate = null;
+    save();
+  }
+  const done = state.loginDate === lwd;
   if(done){showMain();return;}
   const chars=['🌟','🎉','✨','🎊','💫','⭐'];
   document.getElementById('loginChar').textContent=chars[Math.floor(Math.random()*chars.length)];
@@ -708,7 +723,6 @@ function showMain(){
 
 // ======= TABS =======
 function showTab(name){
-  // clear gacha results when leaving gacha tab
   if(name!=='gacha'){
     const r1=document.getElementById('gResult1');
     const r10=document.getElementById('gResult10');
@@ -719,6 +733,8 @@ function showTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sc-'+name).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
+  // ホームタブは毎回日付チェックして再描画
+  if(name==='steps'){renderStepsScreen();renderAdventurer();renderWeeklySummary();}
   if(name==='stats')renderStats(currentStatMode);
   if(name==='zukan')renderZukan();
 }
@@ -734,16 +750,33 @@ function updateUI(){
 
 // ======= STEPS =======
 function renderStepsScreen(){
-  const done=state.stepInputDate===today();
-  document.getElementById('stepsTargetDate').textContent=fmtDateFull(yesterday());
+  const todayStr    = today();
+  const yesterdayStr = yesterday();
+
+  // 入力済みフラグが今日以外の日付なら（=日付が変わった）リセット
+  // ※stepHistory は消さない。過去の記録はそのまま統計に残す
+  if(state.stepInputDate && state.stepInputDate !== todayStr){
+    state.stepInputDate = null;
+    save();
+  }
+
+  const done = state.stepInputDate === todayStr;
+
+  // 記録対象日を表示（「今日入力 → 前日分の歩数」）
+  document.getElementById('stepsTargetDate').textContent = fmtDateFull(yesterdayStr);
+
   if(done){
-    document.getElementById('stepsCard').style.display='none';
-    document.getElementById('stepsDone').style.display='block';
-    const s=state.stepHistory[yesterday()]||0;
-    document.getElementById('doneMsgText').textContent=`${s.toLocaleString()}歩 を記録しました！${s>8000?' (+ボーナス100pt)':''}`;
-  }else{
-    document.getElementById('stepsCard').style.display='block';
-    document.getElementById('stepsDone').style.display='none';
+    // 今日すでに入力済み → 完了表示
+    document.getElementById('stepsCard').style.display = 'none';
+    document.getElementById('stepsDone').style.display = 'block';
+    const s = state.stepHistory[yesterdayStr] || 0;
+    document.getElementById('doneMsgText').textContent =
+      `${s.toLocaleString()}歩（${fmtDateFull(yesterdayStr)}分）を記録しました！${s>8000?' (+ボーナス100pt)':''}`;
+  } else {
+    // 未入力 → 入力フォーム表示
+    document.getElementById('stepsCard').style.display = 'block';
+    document.getElementById('stepsDone').style.display = 'none';
+    document.getElementById('stepsInput').value = '';
   }
 }
 function submitSteps(){
@@ -824,6 +857,7 @@ function renderAdventurer(){
 function renderWeeklySummary(){
   // 今週の月曜を起点に月〜日の7日分を取得
   const now = new Date();
+  const todayStr = today();
   const dow = (now.getDay()+6)%7; // 月=0 … 日=6
   const monday = new Date(now);
   monday.setDate(now.getDate()-dow);
@@ -832,8 +866,8 @@ function renderWeeklySummary(){
   for(let i=0;i<7;i++){
     const d=new Date(monday);
     d.setDate(monday.getDate()+i);
-    const key=d.toISOString().slice(0,10);
-    days.push({key, steps:state.stepHistory[key]||0, future:d>now});
+    const key=localDateStr(d);
+    days.push({key, steps:state.stepHistory[key]||0, future:key>todayStr});
   }
 
   const recorded = days.filter(d=>!d.future && d.steps>0);
@@ -1039,10 +1073,10 @@ function renderStats(mode){
 
   if(mode==='day'){
     document.getElementById('chartTitle').textContent='直近14日';
-    for(let i=13;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);chartData.push({label:fmtDate(key),steps:history[key]||0,key});}
+    for(let i=13;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const key=localDateStr(d);chartData.push({label:fmtDate(key),steps:history[key]||0,key});}
   }else if(mode==='week'){
     document.getElementById('chartTitle').textContent='週別合計（直近8週）';
-    const wm={};entries.forEach(([date,steps])=>{const d=new Date(date);const mn=new Date(d);mn.setDate(d.getDate()-((d.getDay()+6)%7));const wk=mn.toISOString().slice(0,10);wm[wk]=(wm[wk]||0)+steps;});
+    const wm={};entries.forEach(([date,steps])=>{const d=new Date(date+'T00:00:00');const mn=new Date(d);mn.setDate(d.getDate()-((d.getDay()+6)%7));const wk=localDateStr(mn);wm[wk]=(wm[wk]||0)+steps;});
     const weeks=Object.entries(wm).sort((a,b)=>a[0]<b[0]?-1:1).slice(-8);
     chartData=weeks.map(([wk,s])=>({label:fmtDate(wk),steps:s,key:wk}));
     listData=Object.entries(wm).sort((a,b)=>a[0]<b[0]?1:-1).map(([wk,s])=>([wk+'〜',s]));
