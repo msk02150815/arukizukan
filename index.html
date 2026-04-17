@@ -13,20 +13,24 @@
   --accent:#6C63FF;--accent2:#FF6584;--accent3:#43D9AD;
   --bg:#F7F7FF;--surface:#FFFFFF;--surface2:#F0F0FF;
   --text:#1A1A2E;--text2:#6B6B8A;--text3:#A0A0BE;
-  --border:rgba(108,99,255,0.15);--tab-h:72px;--font-size-base:14px;
-  --font-heading:'M PLUS Rounded 1c',sans-serif;--font-body:'Zen Kaku Gothic New',sans-serif;
-  --rSS:#FFD700;--rSSbg:#FFF9E0;--rSSt:#8B6914;
-  --rS:#B044FF;--rSbg:#F5E6FF;--rSt:#5C1A8A;
-  --rA:#FF6B35;--rAbg:#FFF0EB;--rAt:#8A2D0A;
-  --rB:#00B4D8;--rBbg:#E0F7FC;--rBt:#00607A;
-  --rC:#52B788;--rCbg:#E8F6EE;--rCt:#1F6B42;
-  --rD:#A0A0BE;--rDbg:#F0F0FF;--rDt:#4A4A6A;
+  --border:rgba(108,99,255,0.15);
+  --tab-h:84px;
+  --font-size-base:14px;
+  --font-heading:'M PLUS Rounded 1c',sans-serif;
+  --font-body:'Zen Kaku Gothic New',sans-serif;
+  --rSSbg:#FFF9E0;--rSSt:#8B6914;
+  --rSbg:#F5E6FF;--rSt:#5C1A8A;
+  --rAbg:#FFF0EB;--rAt:#8A2D0A;
+  --rBbg:#E0F7FC;--rBt:#00607A;
+  --rCbg:#E8F6EE;--rCt:#1F6B42;
+  --rDbg:#F0F0FF;--rDt:#4A4A6A;
 }
 [data-theme="dark"]{--bg:#0F0F1A;--surface:#1A1A2E;--surface2:#252540;--text:#E8E8FF;--text2:#9090BB;--text3:#5A5A7A;--border:rgba(108,99,255,0.25);}
 [data-color="green"]{--accent:#2ECC71;--accent2:#F39C12;--accent3:#3498DB;}
 [data-color="pink"]{--accent:#E91E8C;--accent2:#FF9800;--accent3:#00BCD4;}
 [data-color="blue"]{--accent:#1565C0;--accent2:#FF5722;--accent3:#00BFA5;}
 [data-color="orange"]{--accent:#E65100;--accent2:#7B1FA2;--accent3:#00ACC1;}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:var(--font-size-base);}
 body{display:flex;flex-direction:column;}
@@ -44,7 +48,7 @@ body{display:flex;flex-direction:column;}
 
 /* MAIN */
 #mainApp{display:none;flex-direction:column;height:100%;}
-.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tab-h) + 8px);}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--tab-h) + 12px);}
 .screen{display:none;padding:1rem;min-height:100%;}
 .screen.active{display:block;}
 
@@ -54,11 +58,29 @@ body{display:flex;flex-direction:column;}
 .pts-chip{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:0.35rem 0.85rem;font-size:0.8rem;color:var(--text2);display:flex;align-items:center;gap:0.35rem;}
 .pts-chip b{color:var(--accent);font-weight:700;font-size:0.95rem;}
 
-/* TAB BAR */
-.tab-bar{position:fixed;bottom:0;left:0;right:0;height:var(--tab-h);background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0);z-index:100;}
-.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;cursor:pointer;color:var(--text3);transition:color 0.15s;padding:8px 2px;font-family:var(--font-body);font-size:0.6rem;}
+/* TAB BAR — larger, more tappable */
+.tab-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  height:var(--tab-h);
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom,0);
+  z-index:100;
+}
+.tab-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;background:transparent;border:none;cursor:pointer;
+  color:var(--text3);transition:color 0.15s,background 0.15s;
+  padding:10px 4px 8px;
+  font-family:var(--font-body);font-size:0.68rem;
+  min-height:60px;
+}
 .tab-btn.active{color:var(--accent);}
-.tab-icon{font-size:1.3rem;line-height:1;}
+.tab-btn:active{background:var(--surface2);}
+.tab-icon{font-size:1.6rem;line-height:1;transition:transform 0.15s;}
+.tab-btn.active .tab-icon{transform:scale(1.15);}
+.tab-label{font-size:0.65rem;line-height:1.2;white-space:nowrap;}
 
 /* CARD */
 .card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:1.1rem;margin-bottom:0.85rem;}
@@ -82,20 +104,23 @@ body{display:flex;flex-direction:column;}
 .done-sub{font-size:0.78rem;color:var(--text3);}
 
 /* GACHA */
-.gacha-pts-display{text-align:center;margin-bottom:1.25rem;}
+.gacha-pts-display{text-align:center;margin-bottom:1rem;}
 .gacha-pts-num{font-family:var(--font-heading);font-size:2.2rem;font-weight:800;color:var(--accent);}
 .gacha-pts-label{font-size:0.75rem;color:var(--text3);}
-.gacha-machine{width:140px;height:140px;margin:0 auto 1.5rem;border-radius:28px;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:56px;cursor:pointer;}
+.gacha-machine{width:140px;height:140px;margin:0 auto 1.25rem;border-radius:28px;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:56px;cursor:pointer;position:relative;overflow:hidden;}
 .gacha-machine.spin{animation:gachaSpin 0.5s ease;}
-@keyframes gachaSpin{0%{transform:scale(1) rotate(0)}25%{transform:scale(0.88) rotate(-5deg)}75%{transform:scale(1.08) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes gachaSpin{0%{transform:scale(1) rotate(0)}25%{transform:scale(0.88) rotate(-8deg)}75%{transform:scale(1.1) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
 .gacha-btns{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1rem;}
-.gacha-btn{padding:0.85rem;border-radius:12px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--font-heading);font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;}
-.gacha-btn:active{background:var(--accent);color:white;}
+.gacha-btn{padding:1rem;border-radius:14px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-family:var(--font-heading);font-size:0.88rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;min-height:60px;}
+.gacha-btn:active{background:var(--accent);color:white;transform:scale(0.97);}
 .gacha-btn:disabled{opacity:0.35;cursor:not-allowed;border-color:var(--text3);color:var(--text3);}
 .gacha-btn.primary{background:var(--accent);color:white;}
+.gacha-btn.primary:active{opacity:0.8;}
+
+/* GACHA RESULT NORMAL */
 .gacha-result{border-radius:16px;background:var(--surface2);border:1px solid var(--border);padding:1.25rem;text-align:center;display:none;}
-.gacha-result.show{display:block;animation:fadeUp 0.3s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.gacha-result.show{display:block;animation:fadeUp 0.35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .result-icon{font-size:56px;display:block;margin-bottom:0.5rem;}
 .result-no{font-size:0.7rem;color:var(--text3);}
 .result-name{font-family:var(--font-heading);font-size:1.15rem;font-weight:700;color:var(--text);margin:0.25rem 0;}
@@ -113,12 +138,48 @@ body{display:flex;flex-direction:column;}
 .mr-no{font-size:8px;color:var(--text3);}
 .mr-dup{font-size:8px;color:var(--accent3);}
 
-/* ZUKAN */
+/* SS GACHA OVERLAY — full screen cinematic */
+#ssOverlay{
+  position:fixed;inset:0;z-index:800;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  background:#000;
+}
+#ssOverlay.show{display:flex;}
+.ss-bg{position:absolute;inset:0;overflow:hidden;}
+.ss-ray{position:absolute;top:50%;left:50%;width:4px;height:120%;background:linear-gradient(to bottom,transparent,rgba(255,215,0,0.6),transparent);transform-origin:top center;animation:rayRotate 3s linear infinite;}
+@keyframes rayRotate{from{transform:translateX(-50%) rotate(0)}to{transform:translateX(-50%) rotate(360deg)}}
+.ss-particles{position:absolute;inset:0;pointer-events:none;}
+.ss-p{position:absolute;width:6px;height:6px;border-radius:50%;background:#FFD700;animation:pFloat 1.5s ease-in-out infinite;}
+@keyframes pFloat{0%,100%{transform:translateY(0) scale(1);opacity:1}50%{transform:translateY(-30px) scale(1.5);opacity:0.5}}
+.ss-content{position:relative;text-align:center;z-index:2;}
+.ss-label{font-family:var(--font-heading);font-size:0.9rem;letter-spacing:0.3em;color:#FFD700;margin-bottom:0.5rem;animation:glow 1s ease-in-out infinite alternate;}
+@keyframes glow{from{text-shadow:0 0 8px #FFD700}to{text-shadow:0 0 24px #FFD700,0 0 48px #FFA500}}
+.ss-rank{font-family:var(--font-heading);font-size:4rem;font-weight:800;color:#FFD700;line-height:1;margin-bottom:0.5rem;animation:rankPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;}
+@keyframes rankPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.ss-icon{font-size:6rem;display:block;margin:0.5rem 0;animation:iconBounce 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.6s both;}
+@keyframes iconBounce{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.ss-name{font-family:var(--font-heading);font-size:1.4rem;font-weight:800;color:#FFF;margin:0.5rem 0;animation:fadeUp 0.5s ease 1s both;}
+.ss-close{margin-top:1.5rem;padding:0.75rem 2.5rem;background:#FFD700;color:#000;border:none;border-radius:100px;font-family:var(--font-heading);font-size:1rem;font-weight:800;cursor:pointer;animation:fadeUp 0.5s ease 1.3s both;}
+.ss-close:active{transform:scale(0.96);}
+
+/* SS CONFIRM ANIMATION — "虹色" flash before reveal */
+#ssConfirm{
+  position:fixed;inset:0;z-index:790;
+  display:none;align-items:center;justify-content:center;
+  background:#000;
+}
+#ssConfirm.show{display:flex;}
+.ss-confirm-text{font-family:var(--font-heading);font-size:1.6rem;font-weight:800;color:white;text-align:center;line-height:1.5;animation:confirmPulse 0.5s ease infinite alternate;}
+@keyframes confirmPulse{from{opacity:0.6;transform:scale(0.97)}to{opacity:1;transform:scale(1.03)}}
+
+/* ZUKAN RANK FILTER */
+.zk-rank-btn{padding:0.3rem 0.65rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text3);font-size:0.72rem;cursor:pointer;transition:all 0.12s;font-family:var(--font-body);}
+.zk-rank-btn.active{background:var(--accent);color:white;border-color:var(--accent);}
 .zukan-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;}
 .zukan-prog{font-size:0.78rem;color:var(--text2);}
 .zukan-prog b{color:var(--accent);}
 .zukan-nav{display:flex;align-items:center;gap:0.75rem;justify-content:center;margin-bottom:1rem;}
-.zukan-page-btn{width:36px;height:36px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.9rem;cursor:pointer;color:var(--text2);}
+.zukan-page-btn{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;color:var(--text2);}
 .zukan-page-btn:active{background:var(--accent);color:white;}
 .zukan-page-btn:disabled{opacity:0.3;cursor:not-allowed;}
 .zukan-page-info{font-size:0.82rem;color:var(--text2);font-weight:500;}
@@ -145,35 +206,34 @@ body{display:flex;flex-direction:column;}
 .modal-owned{font-size:0.78rem;color:var(--text3);text-align:center;margin-top:0.75rem;}
 .modal-close{width:100%;margin-top:1rem;padding:0.85rem;background:var(--surface2);border:1px solid var(--border);border-radius:12px;font-family:var(--font-body);font-size:0.9rem;color:var(--text2);cursor:pointer;}
 
-/* STATS — fixed layout: header + chart in fixed area, list scrollable */
+/* STATS */
 .stat-seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;margin-bottom:1rem;}
-.seg-btn{flex:1;padding:0.45rem;border:none;background:transparent;border-radius:8px;font-family:var(--font-body);font-size:0.78rem;color:var(--text3);cursor:pointer;transition:all 0.15s;}
+.seg-btn{flex:1;padding:0.55rem;border:none;background:transparent;border-radius:8px;font-family:var(--font-body);font-size:0.82rem;color:var(--text3);cursor:pointer;transition:all 0.15s;}
 .seg-btn.active{background:var(--accent);color:white;font-weight:700;}
 .stats-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem;}
 .sum-card{background:var(--surface2);border-radius:12px;padding:0.75rem;text-align:center;}
 .sum-num{font-family:var(--font-heading);font-size:1.2rem;font-weight:800;color:var(--accent);}
 .sum-label{font-size:0.65rem;color:var(--text3);margin-top:2px;}
-/* Chart card: fixed height, no overflow */
 .chart-card{background:var(--surface);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:0.85rem;}
-.chart-card-title{font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:var(--text2);margin-bottom:0.5rem;}
-.chart-outer{position:relative;width:100%;}
-/* y-axis labels area: fixed left width */
-.chart-y-labels{position:absolute;left:0;top:0;bottom:20px;width:40px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:4px;}
-.chart-y-label{font-size:9px;color:var(--text3);}
-/* bars area: left offset by y-labels width */
-.chart-inner{margin-left:42px;position:relative;}
-.chart-bars{display:flex;align-items:flex-end;gap:3px;height:140px;}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:0;min-width:0;}
-.bar-spacer{flex:1;}
-.bar-fill{width:100%;border-radius:3px 3px 0 0;background:var(--accent);opacity:0.8;min-height:0;transition:height 0.4s ease;}
+.chart-card-title{font-family:var(--font-heading);font-weight:700;font-size:0.85rem;color:var(--text2);margin-bottom:0.75rem;}
+/* chart layout: y-labels left, bars right */
+.chart-layout{display:flex;align-items:flex-end;gap:4px;}
+.chart-y-axis{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;width:34px;flex-shrink:0;/* height set by JS */}
+.chart-y-label{font-size:9px;color:var(--text3);line-height:1;}
+/* bars container: relative for goal-line, clips at top */
+.chart-bars-wrap{flex:1;position:relative;min-width:0;}
+/* bar area height is set by JS. Extra 20px below for x-labels */
+.chart-bars{display:flex;align-items:flex-end;gap:3px;width:100%;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0;}
+.bar-top-space{display:flex;flex-direction:column;align-items:center;width:100%;}
+.bar-star{font-size:9px;line-height:1.2;text-align:center;animation:popIn 0.4s ease;}
+@keyframes popIn{0%{transform:scale(0)}70%{transform:scale(1.4)}100%{transform:scale(1)}}
+.bar-fill{width:100%;border-radius:3px 3px 0 0;background:var(--accent);opacity:0.82;transition:height 0.4s ease;}
 .bar-fill.achieved{background:var(--accent3);opacity:1;}
-.bar-label{font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;margin-top:3px;height:14px;line-height:14px;}
-/* goal line: position inside .chart-inner, absolute from top */
-.goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed var(--accent3);display:flex;justify-content:flex-end;pointer-events:none;}
-.goal-label{font-size:9px;color:var(--accent3);background:var(--surface);padding:0 3px;margin-top:-8px;}
-/* achievement star burst on bar */
-.bar-star{font-size:10px;line-height:1;text-align:center;width:100%;animation:popIn 0.4s ease;}
-@keyframes popIn{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.bar-x-label{font-size:9px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;margin-top:4px;line-height:1.2;}
+/* goal dashed line — absolute inside .chart-bars-wrap */
+.goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed var(--accent3);pointer-events:none;display:flex;justify-content:flex-end;}
+.goal-label{font-size:9px;color:var(--accent3);background:var(--surface);padding:0 3px;margin-top:-9px;}
 .stats-list{max-height:240px;overflow-y:auto;}
 .stats-row{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0;border-bottom:1px solid var(--border);}
 .stats-row-date{font-size:0.8rem;color:var(--text2);}
@@ -182,18 +242,24 @@ body{display:flex;flex-direction:column;}
 .achieved-badge{display:inline-block;background:var(--rCbg);color:var(--rCt);font-size:0.6rem;padding:1px 6px;border-radius:100px;margin-left:4px;}
 
 /* SETTINGS */
-.setting-row{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 0;border-bottom:1px solid var(--border);}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:0.9rem 0;border-bottom:1px solid var(--border);}
 .setting-label{font-size:0.88rem;color:var(--text);}
+.setting-sub{font-size:0.72rem;color:var(--text3);margin-top:2px;}
 .font-seg{display:flex;gap:6px;}
-.fs-btn{width:36px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.72rem;font-family:var(--font-body);transition:all 0.15s;}
+.fs-btn{width:40px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:var(--font-body);transition:all 0.15s;}
 .fs-btn.active{background:var(--accent);color:white;border-color:var(--accent);}
-.color-seg{display:flex;gap:6px;}
-.cs-btn{width:28px;height:28px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform 0.15s;}
+.color-seg{display:flex;gap:8px;}
+.cs-btn{width:30px;height:30px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:transform 0.15s;}
 .cs-btn.active{border-color:var(--text);transform:scale(1.15);}
 .theme-seg{display:flex;gap:6px;}
-.ts-btn{padding:0.35rem 0.75rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:var(--font-body);transition:all 0.15s;}
+.ts-btn{padding:0.4rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;font-family:var(--font-body);transition:all 0.15s;}
 .ts-btn.active{background:var(--accent);color:white;border-color:var(--accent);}
 .setting-info{font-size:0.78rem;color:var(--text3);padding:0.75rem 0;line-height:1.6;}
+/* account name input */
+.acct-input{flex:1;margin-left:1rem;padding:0.4rem 0.75rem;font-size:0.88rem;font-family:var(--font-body);color:var(--text);background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;outline:none;text-align:right;max-width:160px;}
+.acct-input:focus{border-color:var(--accent);}
+.acct-save{padding:0.4rem 0.85rem;border-radius:8px;border:none;background:var(--accent);color:white;font-size:0.78rem;cursor:pointer;font-family:var(--font-body);margin-left:6px;transition:opacity 0.15s;}
+.acct-save:active{opacity:0.75;}
 
 /* TOAST */
 #toast{position:fixed;bottom:calc(var(--tab-h) + 1rem);left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:0.6rem 1.2rem;border-radius:100px;font-size:0.82rem;font-weight:500;opacity:0;transition:opacity 0.3s,transform 0.3s;z-index:500;white-space:nowrap;}
@@ -210,6 +276,7 @@ body{display:flex;flex-direction:column;}
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="loginOverlay">
   <div class="login-char" id="loginChar">🌟</div>
   <div class="login-logo">あるき図鑑</div>
@@ -219,9 +286,10 @@ body{display:flex;flex-direction:column;}
   <div class="login-already" id="loginAlreadyBtn" style="display:none" onclick="skipLogin()">今日はログイン済み → スキップ</div>
 </div>
 
+<!-- MAIN APP -->
 <div id="mainApp">
   <div class="top-bar">
-    <span class="top-title">あるき図鑑</span>
+    <span class="top-title" id="topTitle">あるき図鑑</span>
     <div class="pts-chip">⭐ <b id="ptsDisplay">0</b> pt</div>
   </div>
   <div class="content">
@@ -230,7 +298,7 @@ body{display:flex;flex-direction:column;}
     <div id="sc-steps" class="screen active">
       <div class="card" id="stepsCard">
         <div class="card-title">歩数を入力</div>
-        <div class="steps-date-label">記録対象日</div>
+        <div class="steps-date-label">記録対象日（前日の歩数）</div>
         <div class="steps-target-date" id="stepsTargetDate">—</div>
         <div class="steps-input-wrap">
           <input type="number" class="steps-input" id="stepsInput" placeholder="0" min="0" max="99999" inputmode="numeric">
@@ -240,13 +308,13 @@ body{display:flex;flex-direction:column;}
           <b>8,000歩超えでボーナス +100pt！</b><br>
           10歩ごとに1pt獲得。入力は前日の歩数として記録されます。
         </div>
-        <button class="submit-btn" id="stepsSubmitBtn" onclick="submitSteps()">歩数を記録する</button>
+        <button class="submit-btn" onclick="submitSteps()">歩数を記録する</button>
       </div>
       <div id="stepsDone" style="display:none">
         <div class="done-state">
           <div class="done-icon">👟</div>
           <div class="done-msg" id="doneMsgText">歩数を記録しました！</div>
-          <div class="done-sub" id="doneSubText">明日また入力できます</div>
+          <div class="done-sub">明日また入力できます</div>
         </div>
       </div>
     </div>
@@ -259,8 +327,8 @@ body{display:flex;flex-direction:column;}
       </div>
       <div class="gacha-machine" id="gachaMachine">🎰</div>
       <div class="gacha-btns">
-        <button class="gacha-btn" id="gBtn1" onclick="doRoll(1)">1回引く<br><span style="font-size:0.75rem">100pt</span></button>
-        <button class="gacha-btn primary" id="gBtn10" onclick="doRoll(10)">10連ガチャ<br><span style="font-size:0.75rem">900pt</span></button>
+        <button class="gacha-btn" id="gBtn1" onclick="doRoll(1)">1回引く<br><span style="font-size:0.78rem;opacity:0.8">100pt</span></button>
+        <button class="gacha-btn primary" id="gBtn10" onclick="doRoll(10)">10連ガチャ<br><span style="font-size:0.78rem;opacity:0.85">900pt</span></button>
       </div>
       <div class="gacha-result" id="gResult1">
         <span class="result-icon" id="rIcon"></span>
@@ -279,6 +347,21 @@ body{display:flex;flex-direction:column;}
       <div class="zukan-header">
         <span class="zukan-prog">解放済み: <b id="zukanCount">0</b> / 500</span>
       </div>
+      <!-- フィルター & 並び替え -->
+      <div style="display:flex;gap:6px;margin-bottom:0.5rem;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;gap:4px;flex-wrap:wrap;flex:1;">
+          <button class="zk-rank-btn active" data-rank="ALL" onclick="toggleZukanRank('ALL',this)">全て</button>
+          <button class="zk-rank-btn" data-rank="SS" onclick="toggleZukanRank('SS',this)">SS</button>
+          <button class="zk-rank-btn" data-rank="S" onclick="toggleZukanRank('S',this)">S</button>
+          <button class="zk-rank-btn" data-rank="A" onclick="toggleZukanRank('A',this)">A</button>
+          <button class="zk-rank-btn" data-rank="B" onclick="toggleZukanRank('B',this)">B</button>
+          <button class="zk-rank-btn" data-rank="C" onclick="toggleZukanRank('C',this)">C</button>
+          <button class="zk-rank-btn" data-rank="D" onclick="toggleZukanRank('D',this)">D</button>
+        </div>
+        <button id="zukanSortBtn" onclick="toggleZukanSort()" style="padding:0.3rem 0.7rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-size:0.72rem;cursor:pointer;white-space:nowrap;">No. 昇順 ▲</button>
+      </div>
+      <!-- 絞り込み結果サマリー -->
+      <div id="zukanFilterSummary" style="font-size:0.75rem;color:var(--text2);margin-bottom:0.6rem;min-height:1.2em;"></div>
       <div class="zukan-nav">
         <button class="zukan-page-btn" id="prevPage" onclick="changePage(-1)">◀</button>
         <span class="zukan-page-info" id="pageInfo">1 / 56ページ</span>
@@ -302,9 +385,9 @@ body{display:flex;flex-direction:column;}
       </div>
       <div class="chart-card">
         <div class="chart-card-title" id="chartTitle">直近14日</div>
-        <div class="chart-outer" id="chartOuter">
-          <div class="chart-y-labels" id="chartYLabels"></div>
-          <div class="chart-inner" id="chartInner">
+        <div class="chart-layout" id="chartLayout">
+          <div class="chart-y-axis" id="chartYAxis"></div>
+          <div class="chart-bars-wrap" id="chartBarsWrap">
             <div class="chart-bars" id="chartBars"></div>
           </div>
         </div>
@@ -317,6 +400,16 @@ body{display:flex;flex-direction:column;}
 
     <!-- 設定 -->
     <div id="sc-settings" class="screen">
+      <div class="card">
+        <div class="card-title">アカウント</div>
+        <div class="setting-row" style="border-bottom:none">
+          <div class="setting-label">アカウント名</div>
+          <div style="display:flex;align-items:center">
+            <input class="acct-input" id="acctInput" type="text" maxlength="16" placeholder="名前を入力">
+            <button class="acct-save" onclick="saveAccountName()">保存</button>
+          </div>
+        </div>
+      </div>
       <div class="card">
         <div class="card-title">表示設定</div>
         <div class="setting-row">
@@ -348,33 +441,39 @@ body{display:flex;flex-direction:column;}
       <div class="card">
         <div class="card-title">アプリ情報</div>
         <div class="setting-info">
-          あるき図鑑 v2.0<br>
+          あるき図鑑 v3.0<br>
           毎日の歩数を記録してポイントを貯め、ガチャでキャラを集めよう。<br>
           ログインボーナスは毎朝7:00にリセット。歩数は前日分の記録として保存されます。
         </div>
         <div class="setting-row" style="border-bottom:none">
           <div class="setting-label">データをリセット</div>
-          <button style="padding:0.4rem 0.75rem;border-radius:8px;border:1px solid #E24B4A;background:transparent;color:#E24B4A;font-size:0.78rem;cursor:pointer" onclick="resetData()">リセット</button>
+          <button style="padding:0.45rem 0.9rem;border-radius:8px;border:1px solid #E24B4A;background:transparent;color:#E24B4A;font-size:0.82rem;cursor:pointer" onclick="resetData()">リセット</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- TAB BAR -->
   <div class="tab-bar">
     <button class="tab-btn active" id="tab-steps" onclick="showTab('steps')">
-      <span class="tab-icon">👟</span>歩数入力
+      <span class="tab-icon">👟</span>
+      <span class="tab-label">歩数入力</span>
     </button>
     <button class="tab-btn" id="tab-gacha" onclick="showTab('gacha')">
-      <span class="tab-icon">🎰</span>ガチャ
+      <span class="tab-icon">🎰</span>
+      <span class="tab-label">ガチャ</span>
     </button>
     <button class="tab-btn" id="tab-zukan" onclick="showTab('zukan')">
-      <span class="tab-icon">📖</span>図鑑
+      <span class="tab-icon">📖</span>
+      <span class="tab-label">図鑑</span>
     </button>
     <button class="tab-btn" id="tab-stats" onclick="showTab('stats')">
-      <span class="tab-icon">📊</span>歩数統計
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">歩数統計</span>
     </button>
     <button class="tab-btn" id="tab-settings" onclick="showTab('settings')">
-      <span class="tab-icon">⚙️</span>設定
+      <span class="tab-icon">⚙️</span>
+      <span class="tab-label">設定</span>
     </button>
   </div>
 </div>
@@ -393,6 +492,37 @@ body{display:flex;flex-direction:column;}
   </div>
 </div>
 
+<!-- SS 確定演出 -->
+<div id="ssConfirm">
+  <div class="ss-confirm-text" id="ssConfirmText">✨ SSランク確定！ ✨</div>
+</div>
+
+<!-- SS 豪華演出 -->
+<div id="ssOverlay">
+  <div class="ss-bg" id="ssBg"></div>
+  <div class="ss-content">
+    <div class="ss-label">✦ SS RANK ✦</div>
+    <div class="ss-rank">SS</div>
+    <span class="ss-icon" id="ssIcon">🌟</span>
+    <div class="ss-name" id="ssName">伝説のドラゴン</div>
+    <button class="ss-close" onclick="closeSS()">受け取る！</button>
+  </div>
+</div>
+
+<!-- リセット確認モーダル -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal-sheet" style="max-height:none;padding:1.5rem;">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;margin-bottom:1rem;">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">⚠️</div>
+      <div style="font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;">データをリセットしますか？</div>
+      <div style="font-size:0.82rem;color:var(--text3);line-height:1.6;">ポイント・図鑑・歩数記録など<br>すべてのデータが削除されます。<br>この操作は元に戻せません。</div>
+    </div>
+    <button onclick="doReset()" style="display:block;width:100%;padding:0.9rem;margin-bottom:0.6rem;border-radius:12px;border:none;background:#E24B4A;color:white;font-family:var(--font-heading);font-size:1rem;font-weight:700;cursor:pointer;">リセットする</button>
+    <button onclick="cancelReset()" style="display:block;width:100%;padding:0.9rem;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);font-family:var(--font-body);font-size:0.95rem;cursor:pointer;">キャンセル</button>
+  </div>
+</div>
+
 <!-- トースト -->
 <div id="toast"></div>
 
@@ -405,90 +535,79 @@ body{display:flex;flex-direction:column;}
 </div>
 
 <script>
-// ======== CHARACTER DATA (500体) ========
-const ICONS_POOL = ['🐉','🦄','🔥','💎','⚡','🌊','🌙','🌟','🏔','🦋','🐺','🦊','🐦','🌺','🍄','🐙','🦑','🦈','🦁','🐯','🐻','🦝','🦡','🦦','🦥','🐸','🦎','🐊','🦕','🦖','🐬','🐋','🦭','🦅','🦆','🦉','🦚','🦜','🦩','🌵','🌴','🌿','🍀','🌾','🍁','🍂','🌸','🌼','🌻','🌹','💐','💧','❄️','🌪','🌈','⭐','☀️','🪐','🌌','🌀','🔮','💫','🧿','🗝','⚔️','🛡','🪄','🏺','🧸','🦠','🌋','🏜','⛰','🌑','🌕','☄️','🦤','🦬','🦙','🦘','🦏','🐘','🦣','🐪','🦒','🦓','🐃','🦌','🐿','🦔','🪲','🦟','🦗','🕷','🦂','🐌','🐛','🐞','🐝','🐜','🌷','🍇','🍓','🍒','🍑','🥭','🍍','🥝','🍅','🌽','🥕','💧','🌊','🔥','💨','🌱','🪨','🌿'];
-const PREFIXES = ['炎の','氷の','雷の','闇の','光の','風の','土の','水の','聖なる','邪悪な','古代の','神秘の','幻の','伝説の','深海の','天空の','森の','砂漠の','霧の','嵐の','黄金の','銀の','鋼鉄の','翡翠の','紅蓮の','蒼氷の','紫電の','月影の','日輪の','虹色の','不死の','幽霊の','海賊の','桜の','雪の'];
-const BODIES = ['ドラゴン','ウルフ','フェニックス','ゴーレム','スライム','ナイト','ウィザード','ゴースト','タイガー','ファルコン','クラーケン','シャーク','スコーピオン','セルペント','リザード','グリフィン','ヒドラ','キメラ','バジリスク','マンティコア','エルフ','ドワーフ','オーク','トロール','ゾンビ','バンパイア','ウェアウルフ','ガーゴイル','ラミア','サイクロプス','ペガサス','ケルベロス','メデューサ','ミノタウロス','スフィンクス'];
-const VARIANTS = ['','（赤）','（青）','（緑）','（黒）','（白）','（金）','（銀）','　改','　亜種','　進化型','　幼体','　成体','　古代種'];
-const DESCS_POOL = [
-  'はるか古の時代から伝わる伝説の存在。その力は計り知れず、多くの冒険者が憧れを抱いている。穏やかな性格だが、一度怒らせると手がつけられない。',
-  '森の奥深くに棲む神秘的な生き物。月明かりの夜にのみ姿を現すといわれている。出会った者には幸運が訪れるという言い伝えがある。',
-  '嵐の中から生まれたとされる風の化身。その翼が生み出す暴風は、遠く離れた地にまで届くほど強力だ。自由を何よりも愛している。',
-  '深海の底に眠る古代の守護者。海の生き物たちから深く慕われており、困っている者を見ると放っておけない優しい一面もある。',
-  '大地の力を吸収して成長する生命体。長い年月をかけてゆっくりと進化し続けており、最終形態に達したものはほとんど存在しない。',
-  '炎と氷、相反する二つの力を同時に操る稀有な存在。その美しい姿に魅了され、近づいた者は多いが、真の姿を見た者は少ない。',
-  '夢と現実の狭間を自由に行き来できる夢幻の使者。眠っている者の夢に現れ、勇気と希望を与えてくれるという。',
-  '星々の力を束ねて生まれた宇宙の申し子。その体には無数の星屑が宿っており、夜空に放つ輝きは他のどんな星よりも美しい。',
-  '失われた文明が生み出した古代の機械生命体。長い年月を経て自我に目覚め、今は仲間を探して世界を旅している。',
-  '山の頂に住む孤高の賢者。その知恵は計り知れず、世界中から助言を求める者が絶えない。しかし、その答えは常に謎めいている。',
-  '千年に一度だけ花を咲かせる精霊の化身。その花びらに触れた者は、長い眠りについてしまうといわれている。',
-  '雷雲とともに現れる嵐の申し子。その咆哮は雷鳴のように轟き、闘いを前にすると目が黄金色に輝く。',
-  '砂漠の民に守り神として崇められる存在。極限の環境でも生き抜く強さと、仲間を守る優しさを持ち合わせている。',
-  '水面に映る月を食べると言われる幻の生き物。その姿は水の中でのみ見ることができ、陸では透明になってしまう。',
-  '古代の呪いによって生まれた影の使者。光の当たらない場所を好み、忘れ去られた廃墟に静かに棲んでいる。',
-];
+// ======= CHARACTER DATA =======
+const ICONS_POOL=['🐉','🦄','🔥','💎','⚡','🌊','🌙','🌟','🏔','🦋','🐺','🦊','🐦','🌺','🍄','🐙','🦑','🦈','🦁','🐯','🐻','🦝','🦡','🦦','🦥','🐸','🦎','🐊','🦕','🦖','🐬','🐋','🦭','🦅','🦆','🦉','🦚','🦜','🦩','🌵','🌴','🌿','🍀','🌾','🍁','🍂','🌸','🌼','🌻','🌹','💐','💧','❄️','🌪','🌈','⭐','☀️','🪐','🌌','🌀','🔮','💫','🧿','🗝','⚔️','🛡','🪄','🏺','🧸','🦠','🌋','🏜','⛰','🌑','🌕','☄️','🦤','🦬','🦙','🦘','🦏','🐘','🦣','🐪','🦒','🦓','🐃','🦌','🐿','🦔','🪲','🦟','🦗','🕷','🦂','🐌','🐛','🐞','🐝','🐜','🌷','🍇','🍓','🍒','🍑','🥭'];
+const PREFIXES=['炎の','氷の','雷の','闇の','光の','風の','土の','水の','聖なる','邪悪な','古代の','神秘の','幻の','伝説の','深海の','天空の','森の','砂漠の','霧の','嵐の','黄金の','銀の','鋼鉄の','翡翠の','紅蓮の','蒼氷の','紫電の','月影の','日輪の','虹色の','不死の','幽霊の','桜の','雪の','星の'];
+const BODIES=['ドラゴン','ウルフ','フェニックス','ゴーレム','スライム','ナイト','ウィザード','ゴースト','タイガー','ファルコン','クラーケン','シャーク','スコーピオン','セルペント','リザード','グリフィン','ヒドラ','キメラ','バジリスク','マンティコア','エルフ','ドワーフ','オーク','トロール','ゾンビ','バンパイア','ウェアウルフ','ガーゴイル','ラミア','サイクロプス','ペガサス','ケルベロス','メデューサ','ミノタウロス','スフィンクス'];
+const VARIANTS=['','（赤）','（青）','（緑）','（黒）','（白）','（金）','（銀）','　改','　亜種','　進化型','　幼体','　成体','　古代種'];
+const DESCS_POOL=['はるか古の時代から伝わる伝説の存在。その力は計り知れず、多くの冒険者が憧れを抱いている。穏やかな性格だが、一度怒らせると手がつけられない。','森の奥深くに棲む神秘的な生き物。月明かりの夜にのみ姿を現すといわれている。出会った者には幸運が訪れるという言い伝えがある。','嵐の中から生まれたとされる風の化身。その翼が生み出す暴風は、遠く離れた地にまで届くほど強力だ。自由を何よりも愛している。','深海の底に眠る古代の守護者。海の生き物たちから深く慕われており、困っている者を見ると放っておけない優しい一面もある。','大地の力を吸収して成長する生命体。長い年月をかけてゆっくりと進化し続けており、最終形態に達したものはほとんど存在しない。','炎と氷、相反する二つの力を同時に操る稀有な存在。その美しい姿に魅了され近づいた者は多いが、真の姿を見た者は少ない。','夢と現実の狭間を自由に行き来できる夢幻の使者。眠っている者の夢に現れ、勇気と希望を与えてくれるという。','星々の力を束ねて生まれた宇宙の申し子。その体には無数の星屑が宿っており、夜空に放つ輝きは他のどんな星よりも美しい。','失われた文明が生み出した古代の機械生命体。長い年月を経て自我に目覚め、今は仲間を探して世界を旅している。','山の頂に住む孤高の賢者。その知恵は計り知れず、世界中から助言を求める者が絶えない。しかし、その答えは常に謎めいている。','千年に一度だけ花を咲かせる精霊の化身。その花びらに触れた者は、長い眠りについてしまうといわれている。','雷雲とともに現れる嵐の申し子。その咆哮は雷鳴のように轟き、闘いを前にすると目が黄金色に輝く。','砂漠の民に守り神として崇められる存在。極限の環境でも生き抜く強さと、仲間を守る優しさを持ち合わせている。','水面に映る月を食べると言われる幻の生き物。その姿は水の中でのみ見ることができ、陸では透明になってしまう。','古代の呪いによって生まれた影の使者。光の当たらない場所を好み、忘れ去られた廃墟に静かに棲んでいる。'];
+const RANKS=['SS','S','A','B','C','D'];
+const RANK_COUNTS={SS:10,S:30,A:60,B:100,C:150,D:150};
+const RANK_RATES={SS:0.01,S:0.04,A:0.10,B:0.20,C:0.30,D:0.35};
+const CHARS=[];
+let ci=0;
+for(const rank of RANKS){for(let i=0;i<RANK_COUNTS[rank];i++){const bi=ci%(PREFIXES.length*BODIES.length);CHARS.push({id:ci,no:'No.'+String(ci+1).padStart(3,'0'),name:PREFIXES[bi%PREFIXES.length]+BODIES[Math.floor(bi/PREFIXES.length)%BODIES.length]+VARIANTS[Math.floor(ci/(PREFIXES.length*BODIES.length))%VARIANTS.length],icon:ICONS_POOL[ci%ICONS_POOL.length],rank,desc:DESCS_POOL[ci%DESCS_POOL.length]});ci++;}}
 
-const RANKS = ['SS','S','A','B','C','D'];
-const RANK_COUNTS = {SS:10,S:30,A:60,B:100,C:150,D:150};
-const RANK_RATES  = {SS:0.01,S:0.04,A:0.10,B:0.20,C:0.30,D:0.35};
+// ======= STATE =======
+const DEF={pts:0,owned:{},rolls:0,stepHistory:{},loginDate:null,stepInputDate:null,settings:{fontSize:'medium',color:'purple',theme:'light',accountName:''}};
+let state=JSON.parse(JSON.stringify(DEF));
+try{const s=localStorage.getItem('arukizukan3');if(s){const p=JSON.parse(s);state={...DEF,...p,settings:{...DEF.settings,...(p.settings||{})}}; }}catch(e){}
+function save(){try{localStorage.setItem('arukizukan3',JSON.stringify(state));}catch(e){}}
 
-const CHARS = [];
-let ci = 0;
-for (const rank of RANKS) {
-  for (let i = 0; i < RANK_COUNTS[rank]; i++) {
-    const baseIdx = ci % (PREFIXES.length * BODIES.length);
-    const pIdx = baseIdx % PREFIXES.length;
-    const bIdx = Math.floor(baseIdx / PREFIXES.length) % BODIES.length;
-    const vIdx = Math.floor(ci / (PREFIXES.length * BODIES.length)) % VARIANTS.length;
-    CHARS.push({
-      id: ci,
-      no: 'No.' + String(ci+1).padStart(3,'0'),
-      name: PREFIXES[pIdx] + BODIES[bIdx] + VARIANTS[vIdx],
-      icon: ICONS_POOL[ci % ICONS_POOL.length],
-      rank,
-      desc: DESCS_POOL[ci % DESCS_POOL.length],
-    });
-    ci++;
-  }
-}
-
-// ======== STATE ========
-const DEF = {pts:0,owned:{},rolls:0,stepHistory:{},loginDate:null,stepInputDate:null,settings:{fontSize:'medium',color:'purple',theme:'light'}};
-let state = JSON.parse(JSON.stringify(DEF));
-try{const s=localStorage.getItem('arukizukan2');if(s)state={...DEF,...JSON.parse(s),settings:{...DEF.settings,...(JSON.parse(s).settings||{})}};}catch(e){}
-function save(){try{localStorage.setItem('arukizukan2',JSON.stringify(state));}catch(e){}}
-
-// ======== DATE ========
+// ======= DATE =======
 function today(){return new Date().toISOString().slice(0,10);}
 function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return d.toISOString().slice(0,10);}
-function loginWindowDate(){const now=new Date();if(now.getHours()<7){const p=new Date(now);p.setDate(p.getDate()-1);return p.toISOString().slice(0,10)+'_eve';}return now.toISOString().slice(0,10);}
+function loginWindowDate(){const n=new Date();if(n.getHours()<7){const p=new Date(n);p.setDate(p.getDate()-1);return p.toISOString().slice(0,10)+'_eve';}return n.toISOString().slice(0,10);}
 function fmtDate(iso){const[,m,d]=iso.split('-');return `${m}/${d}`;}
 function fmtDateFull(iso){const[y,m,d]=iso.split('-');return `${y}年${m}月${d}日`;}
 
-// ======== TOAST ========
+// ======= TOAST =======
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-// ======== ACHIEVEMENT ========
-function showAchieve(steps){
-  const earned=Math.floor(steps/10);
-  document.getElementById('achMsg').textContent=`${steps.toLocaleString()}歩を達成！ボーナス +100pt 獲得！`;
-  document.getElementById('achievePopup').classList.add('show');
-}
+// ======= ACHIEVEMENT =======
+function showAchieve(steps){document.getElementById('achMsg').textContent=`${steps.toLocaleString()}歩を達成！ボーナス +100pt 獲得！`;document.getElementById('achievePopup').classList.add('show');}
 function closeAchieve(){document.getElementById('achievePopup').classList.remove('show');}
 
-// ======== LOGIN ========
+// ======= SS演出 =======
+let ssQueue=[];
+function showSSConfirm(char){
+  return new Promise(resolve=>{
+    const conf=document.getElementById('ssConfirm');
+    conf.classList.add('show');
+    document.getElementById('ssConfirmText').textContent='✨ SSランク確定！ ✨';
+    setTimeout(()=>{
+      conf.classList.remove('show');
+      showSSOverlay(char,resolve);
+    },1800);
+  });
+}
+function showSSOverlay(char,cb){
+  document.getElementById('ssIcon').textContent=char.icon;
+  document.getElementById('ssName').textContent=char.name;
+  // generate rays
+  const bg=document.getElementById('ssBg');
+  let html='';
+  for(let i=0;i<12;i++){html+=`<div class="ss-ray" style="transform:translateX(-50%) rotate(${i*30}deg);animation-delay:${i*0.08}s"></div>`;}
+  // particles
+  const colors=['#FFD700','#FFA500','#FF6B6B','#FF9FF3','#48DBFB','#FFFFFF'];
+  for(let i=0;i<20;i++){const x=Math.random()*100;const y=Math.random()*100;const c=colors[i%colors.length];const d=(Math.random()*1.5).toFixed(2);const del=(Math.random()*0.8).toFixed(2);html+=`<div class="ss-p" style="left:${x}%;top:${y}%;background:${c};animation-delay:${del}s;animation-duration:${d}s"></div>`;}
+  bg.innerHTML=html;
+  document.getElementById('ssOverlay').classList.add('show');
+  if(cb)window._ssCb=cb;
+}
+function closeSS(){
+  document.getElementById('ssOverlay').classList.remove('show');
+  if(window._ssCb){window._ssCb();window._ssCb=null;}
+}
+
+// ======= LOGIN =======
 function checkLogin(){
-  const lwd=loginWindowDate();
-  const done=state.loginDate===lwd;
+  const lwd=loginWindowDate();const done=state.loginDate===lwd;
   const chars=['🌟','🎉','✨','🎊','💫','⭐'];
   document.getElementById('loginChar').textContent=chars[Math.floor(Math.random()*chars.length)];
   if(done){document.getElementById('loginBtn').disabled=true;document.getElementById('loginBtn').textContent='本日のログイン済み ✓';document.getElementById('loginAlreadyBtn').style.display='block';}
 }
-function doLogin(){
-  const lwd=loginWindowDate();
-  if(state.loginDate!==lwd){state.pts+=100;state.loginDate=lwd;save();}
-  showMain();
-}
+function doLogin(){const lwd=loginWindowDate();if(state.loginDate!==lwd){state.pts+=100;state.loginDate=lwd;save();}showMain();}
 function skipLogin(){showMain();}
 function showMain(){
   document.getElementById('loginOverlay').style.display='none';
@@ -497,8 +616,15 @@ function showMain(){
   updateUI();renderStepsScreen();renderStats('day');renderZukan();
 }
 
-// ======== TABS ========
+// ======= TABS =======
 function showTab(name){
+  // clear gacha results when leaving gacha tab
+  if(name!=='gacha'){
+    const r1=document.getElementById('gResult1');
+    const r10=document.getElementById('gResult10');
+    r1.classList.remove('show');r1.style.display='none';
+    r10.classList.remove('show');r10.style.display='none';
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sc-'+name).classList.add('active');
@@ -507,26 +633,24 @@ function showTab(name){
   if(name==='zukan')renderZukan();
 }
 
-// ======== UI ========
+// ======= UI =======
 function updateUI(){
-  document.getElementById('ptsDisplay').textContent=state.pts.toLocaleString();
-  document.getElementById('gachaPtsNum').textContent=state.pts.toLocaleString();
-  document.getElementById('gBtn1').disabled=state.pts<100;
-  document.getElementById('gBtn10').disabled=state.pts<900;
+  const pts=state.pts;
+  document.getElementById('ptsDisplay').textContent=pts.toLocaleString();
+  document.getElementById('gachaPtsNum').textContent=pts.toLocaleString();
+  document.getElementById('gBtn1').disabled=pts<100;
+  document.getElementById('gBtn10').disabled=pts<900;
 }
 
-// ======== STEPS ========
+// ======= STEPS =======
 function renderStepsScreen(){
-  const todayStr=today();const yStr=yesterday();
-  const done=state.stepInputDate===todayStr;
-  document.getElementById('stepsTargetDate').textContent=fmtDateFull(yStr);
+  const done=state.stepInputDate===today();
+  document.getElementById('stepsTargetDate').textContent=fmtDateFull(yesterday());
   if(done){
     document.getElementById('stepsCard').style.display='none';
     document.getElementById('stepsDone').style.display='block';
-    const s=state.stepHistory[yStr]||0;
-    const b=s>8000;
-    document.getElementById('doneMsgText').textContent=`${s.toLocaleString()}歩 を記録しました！${b?' (+ボーナス100pt)':''}`;
-    document.getElementById('doneSubText').textContent='明日また入力できます';
+    const s=state.stepHistory[yesterday()]||0;
+    document.getElementById('doneMsgText').textContent=`${s.toLocaleString()}歩 を記録しました！${s>8000?' (+ボーナス100pt)':''}`;
   }else{
     document.getElementById('stepsCard').style.display='block';
     document.getElementById('stepsDone').style.display='none';
@@ -535,119 +659,188 @@ function renderStepsScreen(){
 function submitSteps(){
   const val=parseInt(document.getElementById('stepsInput').value)||0;
   if(val<0)return;
-  const yStr=yesterday();
-  const pts=Math.floor(val/10);
-  const bonus=val>8000?100:0;
-  state.pts+=pts+bonus;
-  state.stepHistory[yStr]=val;
-  state.stepInputDate=today();
+  const pts=Math.floor(val/10);const bonus=val>8000?100:0;
+  state.pts+=pts+bonus;state.stepHistory[yesterday()]=val;state.stepInputDate=today();
   save();updateUI();renderStepsScreen();
   if(val>8000)setTimeout(()=>showAchieve(val),400);
   else showToast(`+${pts}pt 獲得！`);
 }
 
-// ======== GACHA ========
+// ======= GACHA =======
+let rolling=false;
 function weightedDraw(){
   const r=Math.random();let cum=0;
   for(const rank of RANKS){cum+=RANK_RATES[rank];if(r<cum){const pool=CHARS.filter(c=>c.rank===rank);return pool[Math.floor(Math.random()*pool.length)];}}
   return CHARS[CHARS.length-1];
 }
-function doRoll(n){
+
+async function doRoll(n){
+  if(rolling)return;
   const cost=n===1?100:900;if(state.pts<cost)return;
+  rolling=true;
   state.pts-=cost;state.rolls+=n;
   const results=[];let bp=0;
   for(let i=0;i<n;i++){const c=weightedDraw();const dup=!!state.owned[c.id];state.owned[c.id]=(state.owned[c.id]||0)+1;if(dup)bp+=5;results.push({c,dup});}
   if(bp>0)state.pts+=bp;save();
-  const m=document.getElementById('gachaMachine');m.classList.add('spin');
-  setTimeout(()=>{
-    m.classList.remove('spin');
-    if(n===1){
-      const{c,dup}=results[0];
-      document.getElementById('rIcon').textContent=c.icon;
-      document.getElementById('rNo').textContent=c.no;
-      document.getElementById('rName').textContent=c.name;
-      const rb=document.getElementById('rRank');rb.textContent=c.rank+'ランク';rb.className='rank-badge rk-'+c.rank;
-      document.getElementById('rDup').textContent=dup?'図鑑解放済み → +5pt':'';
-      const r1=document.getElementById('gResult1');r1.classList.remove('show');r1.style.display='block';void r1.offsetWidth;r1.classList.add('show');
-      document.getElementById('gResult10').style.display='none';
+
+  // spin animation
+  const m=document.getElementById('gachaMachine');
+  m.classList.add('spin');
+  await sleep(500);
+  m.classList.remove('spin');
+
+  // check for SS in results
+  const ssResults=results.filter(r=>r.c.rank==='SS');
+
+  if(n===1){
+    const{c,dup}=results[0];
+    if(c.rank==='SS'){
+      // SS 確定演出
+      await showSSConfirm(c);
+      showSingleResult(c,dup);
     }else{
-      document.getElementById('gResult1').style.display='none';
-      const g=document.getElementById('multiGrid');
-      g.innerHTML=results.map(({c,dup})=>`<div class="mr-cell"><span class="mr-icon">${c.icon}</span><div class="mr-no">${c.no}</div><span class="rank-badge rk-${c.rank}" style="font-size:8px;padding:1px 5px">${c.rank}</span>${dup?'<div class="mr-dup">+5pt</div>':''}</div>`).join('');
-      const r10=document.getElementById('gResult10');r10.style.display='block';r10.classList.remove('show');void r10.offsetWidth;r10.classList.add('show');
+      showSingleResult(c,dup);
     }
-    updateUI();
-  },500);
+  }else{
+    // 10連: show SS confirm first if any, then show grid
+    if(ssResults.length>0){
+      await showSSConfirm(ssResults[0].c);
+    }
+    showMultiResult(results);
+  }
+  updateUI();
+  rolling=false;
 }
 
-// ======== ZUKAN ========
-let zukanPage=0;
-const PER_PAGE=9;
+function showSingleResult(c,dup){
+  document.getElementById('rIcon').textContent=c.icon;
+  document.getElementById('rNo').textContent=c.no;
+  document.getElementById('rName').textContent=c.name;
+  const rb=document.getElementById('rRank');rb.textContent=c.rank+'ランク';rb.className='rank-badge rk-'+c.rank;
+  document.getElementById('rDup').textContent=dup?'図鑑解放済み → +5pt':'';
+  const r1=document.getElementById('gResult1');
+  r1.classList.remove('show');r1.style.display='block';void r1.offsetWidth;r1.classList.add('show');
+  document.getElementById('gResult10').style.display='none';
+}
+
+function showMultiResult(results){
+  document.getElementById('gResult1').style.display='none';
+  const g=document.getElementById('multiGrid');
+  g.innerHTML=results.map(({c,dup})=>`<div class="mr-cell"${c.rank==='SS'?' style="border:1.5px solid #FFD700"':''}>
+    <span class="mr-icon">${c.icon}</span>
+    <div class="mr-no">${c.no}</div>
+    <span class="rank-badge rk-${c.rank}" style="font-size:8px;padding:1px 5px">${c.rank}</span>
+    ${dup?'<div class="mr-dup">+5pt</div>':''}
+  </div>`).join('');
+  const r10=document.getElementById('gResult10');r10.style.display='block';r10.classList.remove('show');void r10.offsetWidth;r10.classList.add('show');
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ======= ZUKAN =======
+let zukanPage=0;const PER_PAGE=9;
+let zukanRankFilters=new Set(['ALL']);
+let zukanSortAsc=true;
+
+function toggleZukanRank(rank){
+  if(rank==='ALL'){
+    zukanRankFilters=new Set(['ALL']);
+  } else {
+    zukanRankFilters.delete('ALL');
+    if(zukanRankFilters.has(rank)){
+      zukanRankFilters.delete(rank);
+      if(zukanRankFilters.size===0) zukanRankFilters=new Set(['ALL']);
+    } else {
+      zukanRankFilters.add(rank);
+    }
+  }
+  document.querySelectorAll('.zk-rank-btn').forEach(b=>{
+    b.classList.toggle('active', zukanRankFilters.has(b.getAttribute('data-rank')));
+  });
+  zukanPage=0;
+  renderZukan();
+}
+function toggleZukanSort(){
+  zukanSortAsc=!zukanSortAsc;zukanPage=0;
+  document.getElementById('zukanSortBtn').textContent=zukanSortAsc?'No. 昇順 ▲':'No. 降順 ▼';
+  renderZukan();
+}
+function getFilteredChars(){
+  let list=zukanRankFilters.has('ALL')?[...CHARS]:CHARS.filter(c=>zukanRankFilters.has(c.rank));
+  if(!zukanSortAsc) list=[...list].reverse();
+  return list;
+}
 function renderZukan(){
-  const totalPages=Math.ceil(CHARS.length/PER_PAGE);
-  const start=zukanPage*PER_PAGE;
-  const slice=CHARS.slice(start,start+PER_PAGE);
-  const opened=Object.keys(state.owned).filter(id=>state.owned[id]>0).length;
-  document.getElementById('zukanCount').textContent=opened;
-  document.getElementById('pageInfo').textContent=`${zukanPage+1} / ${totalPages}ページ`;
+  const list=getFilteredChars();
+  const tp=Math.max(1,Math.ceil(list.length/PER_PAGE));
+  zukanPage=Math.min(zukanPage,tp-1);
+  const slice=list.slice(zukanPage*PER_PAGE,(zukanPage+1)*PER_PAGE);
+  const openedTotal=Object.keys(state.owned).filter(id=>state.owned[id]>0).length;
+  document.getElementById('zukanCount').textContent=openedTotal;
+  document.getElementById('pageInfo').textContent=`${zukanPage+1} / ${tp}ページ`;
   document.getElementById('prevPage').disabled=zukanPage===0;
-  document.getElementById('nextPage').disabled=zukanPage>=totalPages-1;
-  const grid=document.getElementById('zukanGrid');
-  grid.innerHTML=slice.map(c=>{
+  document.getElementById('nextPage').disabled=zukanPage>=tp-1;
+  // サマリー
+  const sumEl=document.getElementById('zukanFilterSummary');
+  if(zukanRankFilters.has('ALL')){
+    sumEl.textContent=`全500体 ／ 解放済み ${openedTotal}体`;
+  } else {
+    const ranks=[...zukanRankFilters].sort((a,b)=>RANKS.indexOf(a)-RANKS.indexOf(b));
+    sumEl.textContent=ranks.map(r=>{
+      const total=CHARS.filter(c=>c.rank===r).length;
+      const opened=CHARS.filter(c=>c.rank===r&&(state.owned[c.id]||0)>0).length;
+      return `${r}ランク: ${opened}/${total}体`;
+    }).join('　');
+  }
+  document.getElementById('zukanGrid').innerHTML=slice.map(c=>{
     const open=(state.owned[c.id]||0)>0;
     return open
       ?`<div class="zc open" onclick="openModal(${c.id})"><div class="zc-icon">${c.icon}</div><div class="zc-no">${c.no}</div><div class="zc-name">${c.name}</div><span class="rank-badge rk-${c.rank}" style="font-size:0.6rem;padding:1px 6px">${c.rank}</span></div>`
       :`<div class="zc"><div class="zc-lock">❓</div><div class="zc-no">${c.no}</div><div class="zc-name" style="color:var(--text3)">???</div></div>`;
   }).join('');
 }
-function changePage(dir){const tp=Math.ceil(CHARS.length/PER_PAGE);zukanPage=Math.max(0,Math.min(tp-1,zukanPage+dir));renderZukan();}
+function changePage(dir){
+  const tp=Math.max(1,Math.ceil(getFilteredChars().length/PER_PAGE));
+  zukanPage=Math.max(0,Math.min(tp-1,zukanPage+dir));
+  renderZukan();
+}
 function openModal(id){
   const c=CHARS[id];if(!c||!(state.owned[id]>0))return;
-  document.getElementById('mIcon').textContent=c.icon;
-  document.getElementById('mNo').textContent=c.no;
+  document.getElementById('mIcon').textContent=c.icon;document.getElementById('mNo').textContent=c.no;
   document.getElementById('mName').textContent=c.name;
   document.getElementById('mRank').innerHTML=`<span class="rank-badge rk-${c.rank}">${c.rank}ランク</span>`;
-  document.getElementById('mDesc').textContent=c.desc;
-  document.getElementById('mOwned').textContent=`所持数: ${state.owned[id]}体`;
+  document.getElementById('mDesc').textContent=c.desc;document.getElementById('mOwned').textContent=`所持数: ${state.owned[id]}体`;
   document.getElementById('zukanModal').classList.add('open');
 }
 function closeModal(e){if(e.target===document.getElementById('zukanModal'))document.getElementById('zukanModal').classList.remove('open');}
 
-// ======== STATS ========
+// ======= STATS =======
 let currentStatMode='day';
-function setStatMode(mode,btn){
-  currentStatMode=mode;
-  document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');renderStats(mode);
-}
+function setStatMode(mode,btn){currentStatMode=mode;document.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStats(mode);}
 
 function renderStats(mode){
   const history=state.stepHistory;
   const entries=Object.entries(history).sort((a,b)=>a[0]<b[0]?-1:1);
-  let chartData=[];let listData=[...entries].reverse();
-  const now=new Date();
+  let chartData=[];let listData=[...entries].reverse();const now=new Date();
 
   if(mode==='day'){
     document.getElementById('chartTitle').textContent='直近14日';
     for(let i=13;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);chartData.push({label:fmtDate(key),steps:history[key]||0,key});}
   }else if(mode==='week'){
     document.getElementById('chartTitle').textContent='週別合計（直近8週）';
-    const wm={};
-    entries.forEach(([date,steps])=>{const d=new Date(date);const mn=new Date(d);mn.setDate(d.getDate()-((d.getDay()+6)%7));const wk=mn.toISOString().slice(0,10);wm[wk]=(wm[wk]||0)+steps;});
+    const wm={};entries.forEach(([date,steps])=>{const d=new Date(date);const mn=new Date(d);mn.setDate(d.getDate()-((d.getDay()+6)%7));const wk=mn.toISOString().slice(0,10);wm[wk]=(wm[wk]||0)+steps;});
     const weeks=Object.entries(wm).sort((a,b)=>a[0]<b[0]?-1:1).slice(-8);
     chartData=weeks.map(([wk,s])=>({label:fmtDate(wk),steps:s,key:wk}));
     listData=Object.entries(wm).sort((a,b)=>a[0]<b[0]?1:-1).map(([wk,s])=>([wk+'〜',s]));
   }else if(mode==='month'){
     document.getElementById('chartTitle').textContent='月別合計（直近12ヶ月）';
-    const mm={};
-    entries.forEach(([date,steps])=>{const m=date.slice(0,7);mm[m]=(mm[m]||0)+steps;});
+    const mm={};entries.forEach(([date,steps])=>{const m=date.slice(0,7);mm[m]=(mm[m]||0)+steps;});
     const months=Object.entries(mm).sort((a,b)=>a[0]<b[0]?-1:1).slice(-12);
     chartData=months.map(([m,s])=>({label:m.slice(5)+'月',steps:s,key:m}));
     listData=Object.entries(mm).sort((a,b)=>a[0]<b[0]?1:-1).map(([m,s])=>([m,s]));
   }else{
     document.getElementById('chartTitle').textContent='年別合計';
-    const ym={};
-    entries.forEach(([date,steps])=>{const y=date.slice(0,4);ym[y]=(ym[y]||0)+steps;});
+    const ym={};entries.forEach(([date,steps])=>{const y=date.slice(0,4);ym[y]=(ym[y]||0)+steps;});
     const years=Object.entries(ym).sort((a,b)=>a[0]<b[0]?-1:1);
     chartData=years.map(([y,s])=>({label:y+'年',steps:s,key:y}));
     listData=Object.entries(ym).sort((a,b)=>a[0]<b[0]?1:-1).map(([y,s])=>([y+'年',s]));
@@ -661,72 +854,71 @@ function renderStats(mode){
   document.getElementById('statAvg').textContent=avg>=10000?(avg/10000).toFixed(1)+'万':avg.toLocaleString();
   document.getElementById('statDays').textContent=allSteps.length;
 
-  // chart — fixed height approach
-  const CHART_H=140; // px height for bars
+  // chart dims
   const GOAL=8000;
+  const STAR_H=18;  // reserved space above bars for ⭐ — never overlaps title
+  const BAR_H=100;  // actual bar drawing area
+  const XLABEL_H=20;
   const maxSteps=Math.max(...chartData.map(d=>d.steps),GOAL,1);
+  // ensure at least 8 columns so bars don't stretch too wide when data is sparse
+  const MIN_COLS=8;
+  if(chartData.length<MIN_COLS){
+    const pad=MIN_COLS-chartData.length;
+    for(let i=0;i<pad;i++)chartData.unshift({label:'',steps:0,key:'_pad'+i,pad:true});
+  }
 
-  // y-axis labels
-  const steps0=0,stepsMax=maxSteps;
-  const yMid=Math.round(stepsMax/2/1000)*1000;
-  const yLabels=[
-    {val:stepsMax,pct:1},
-    {val:yMid,pct:yMid/stepsMax},
-    {val:0,pct:0}
-  ];
-  const ylEl=document.getElementById('chartYLabels');
-  // height of y-labels area = CHART_H (bars) + 0 (no labels below bars, labels are inside)
-  // We position from top of chart-outer which includes bar area + label row (14px)
-  const totalH=CHART_H+14;
-  document.getElementById('chartOuter').style.height=(totalH+4)+'px';
-  ylEl.innerHTML=yLabels.map(({val,pct})=>{
-    const topPx=Math.round((1-pct)*CHART_H);
-    return `<span class="chart-y-label" style="position:absolute;top:${topPx}px;right:4px;transform:translateY(-50%)">${val>=1000?(val/1000).toFixed(0)+'k':val}</span>`;
-  }).join('');
-  ylEl.style.position='absolute';ylEl.style.left='0';ylEl.style.top='0';ylEl.style.width='38px';ylEl.style.height=CHART_H+'px';
+  // y-axis
+  const yMid=Math.round(maxSteps/2/1000)*1000;
+  const yAxis=document.getElementById('chartYAxis');
+  // y-axis height = STAR_H + BAR_H + XLABEL_H
+  yAxis.style.cssText=`position:relative;height:${STAR_H+BAR_H+XLABEL_H}px;`;
+  yAxis.innerHTML=[
+    {val:maxSteps,top:STAR_H},
+    {val:yMid,top:STAR_H+Math.round((1-yMid/maxSteps)*BAR_H)},
+    {val:0,top:STAR_H+BAR_H}
+  ].map(({val,top})=>`<span class="chart-y-label" style="position:absolute;top:${top}px;right:0;transform:translateY(-50%)">${val>=1000?(val/1000).toFixed(0)+'k':val}</span>`).join('');
 
-  // bars
+  // bars wrap
+  const wrap=document.getElementById('chartBarsWrap');
+  wrap.style.cssText=`position:relative;flex:1;min-width:0;height:${STAR_H+BAR_H+XLABEL_H}px;`;
   const barsEl=document.getElementById('chartBars');
-  barsEl.style.height=CHART_H+'px';
+  // bars container: sits at top of wrap, full height, flex column per bar
+  barsEl.style.cssText=`display:flex;align-items:flex-end;gap:3px;width:100%;height:${STAR_H+BAR_H}px;padding-top:${STAR_H}px;box-sizing:border-box;`;
   barsEl.innerHTML=chartData.map(d=>{
-    const pct=d.steps/maxSteps;
-    const h=Math.max(Math.round(pct*CHART_H),d.steps>0?2:0);
+    if(d.pad)return `<div class="bar-col" style="flex:1;min-width:0"></div>`;
+    const h=Math.max(Math.round((d.steps/maxSteps)*BAR_H),d.steps>0?2:0);
     const achieved=d.steps>=GOAL;
-    return `<div class="bar-col">
-      <div class="bar-spacer"></div>
-      ${achieved?'<div class="bar-star">⭐</div>':''}
-      <div class="bar-fill${achieved?' achieved':''}" style="height:${h}px"></div>
-      <div class="bar-label">${d.label}</div>
+    // ⭐ sits ABOVE the bar area in the STAR_H zone, via negative margin from bar top
+    const starOffset=BAR_H-h; // px from bottom of bar area to bar top
+    return `<div class="bar-col" style="flex:1;min-width:0;position:relative;display:flex;flex-direction:column;justify-content:flex-end;">
+      ${achieved?`<div class="bar-star" style="position:absolute;bottom:${h+XLABEL_H}px;left:0;right:0;text-align:center;font-size:10px;line-height:1">⭐</div>`:''}
+      <div class="bar-fill${achieved?' achieved':''}" style="height:${h}px;width:100%;border-radius:3px 3px 0 0;"></div>
+      <div class="bar-x-label" style="height:${XLABEL_H}px;line-height:${XLABEL_H}px;">${d.label}</div>
     </div>`;
   }).join('');
 
-  // goal line inside chart-inner (position relative to bar area top)
-  const inner=document.getElementById('chartInner');
-  inner.querySelectorAll('.goal-line').forEach(e=>e.remove());
-  const goalTopPx=Math.round((1-Math.min(GOAL/maxSteps,1))*CHART_H);
-  if(goalTopPx>=0&&goalTopPx<=CHART_H){
+  // goal line — sits inside wrap, top offset = STAR_H + position within BAR_H
+  wrap.querySelectorAll('.goal-line').forEach(e=>e.remove());
+  const goalTop=STAR_H+Math.round((1-Math.min(GOAL/maxSteps,1))*BAR_H);
+  if(goalTop>=STAR_H&&goalTop<=STAR_H+BAR_H){
     const gl=document.createElement('div');
-    gl.className='goal-line';gl.style.top=goalTopPx+'px';gl.style.position='absolute';gl.style.left='0';gl.style.right='0';
-    gl.innerHTML='<span class="goal-label">8,000歩</span>';
-    inner.style.position='relative';
-    inner.insertBefore(gl,inner.firstChild);
+    gl.className='goal-line';
+    gl.style.cssText=`position:absolute;top:${goalTop}px;left:0;right:0;border-top:1.5px dashed var(--accent3);display:flex;justify-content:flex-end;pointer-events:none;`;
+    gl.innerHTML='<span class="goal-label" style="font-size:9px;color:var(--accent3);background:var(--surface);padding:0 3px;margin-top:-9px;">8,000歩</span>';
+    wrap.insertBefore(gl,wrap.firstChild);
   }
 
   // list
   const listEl=document.getElementById('statsList');
   if(mode==='day'){
-    listEl.innerHTML=listData.slice(0,30).map(([date,steps])=>{
-      const b=steps>8000;
-      return `<div class="stats-row"><span class="stats-row-date">${fmtDateFull(date)}</span><div style="text-align:right"><div class="stats-row-steps">${steps.toLocaleString()}歩${b?'<span class="achieved-badge">⭐達成</span>':''}</div>${b?'<div class="stats-row-bonus">ボーナス +100pt</div>':''}</div></div>`;
-    }).join('')||'<div style="padding:1rem;text-align:center;color:var(--text3);font-size:0.82rem">記録がありません</div>';
+    listEl.innerHTML=listData.slice(0,30).map(([date,steps])=>{const b=steps>8000;return `<div class="stats-row"><span class="stats-row-date">${fmtDateFull(date)}</span><div style="text-align:right"><div class="stats-row-steps">${steps.toLocaleString()}歩${b?'<span class="achieved-badge">⭐達成</span>':''}</div>${b?'<div class="stats-row-bonus">ボーナス +100pt</div>':''}</div></div>`;}).join('')||noData();
   }else{
-    listEl.innerHTML=listData.map(([period,steps])=>{
-      return `<div class="stats-row"><span class="stats-row-date">${period}</span><div class="stats-row-steps">${steps.toLocaleString()}歩</div></div>`;
-    }).join('')||'<div style="padding:1rem;text-align:center;color:var(--text3);font-size:0.82rem">記録がありません</div>';
+    listEl.innerHTML=listData.map(([period,steps])=>`<div class="stats-row"><span class="stats-row-date">${period}</span><div class="stats-row-steps">${steps.toLocaleString()}歩</div></div>`).join('')||noData();
   }
 }
+function noData(){return '<div style="padding:1rem;text-align:center;color:var(--text3);font-size:0.82rem">記録がありません</div>';}
 
-// ======== SETTINGS ========
+// ======= SETTINGS =======
 function applySettings(){
   const s=state.settings;
   const sizes={small:'12px',medium:'14px',large:'16px'};
@@ -740,13 +932,36 @@ function syncSettingsUI(){
   document.querySelectorAll('.fs-btn').forEach(b=>b.classList.toggle('active',b.textContent===szMap[s.fontSize]));
   document.querySelectorAll('.ts-btn').forEach(b=>b.classList.toggle('active',(s.theme==='dark'&&b.textContent==='ダーク')||(s.theme!=='dark'&&b.textContent==='ライト')));
   document.querySelectorAll('.cs-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick')?.includes(s.color||'purple')));
+  const acct=s.accountName||'';
+  document.getElementById('acctInput').value=acct;
+  updateAccountDisplay(acct);
 }
-function setFontSize(size,btn){state.settings.fontSize=size;save();applySettings();document.querySelectorAll('.fs-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function setTheme(theme,btn){state.settings.theme=theme;save();applySettings();document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function setColor(color,btn){state.settings.color=color;save();applySettings();document.querySelectorAll('.cs-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function resetData(){if(confirm('全データをリセットしますか？この操作は元に戻せません。')){localStorage.removeItem('arukizukan2');location.reload();}}
+function updateAccountDisplay(name){
+  const title=document.getElementById('topTitle');
+  title.textContent=name?`${name}のあるき図鑑`:'あるき図鑑';
+}
+function saveAccountName(){
+  const val=document.getElementById('acctInput').value.trim();
+  state.settings.accountName=val;save();applySettings();
+  updateAccountDisplay(val);
+  showToast(val?`「${val}」で保存しました`:'アカウント名を削除しました');
+}
+function setFontSize(s,btn){state.settings.fontSize=s;save();applySettings();document.querySelectorAll('.fs-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setTheme(t,btn){state.settings.theme=t;save();applySettings();document.querySelectorAll('.ts-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function setColor(c,btn){state.settings.color=c;save();applySettings();document.querySelectorAll('.cs-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+function resetData(){
+  document.getElementById('resetModal').classList.add('open');
+}
+function doReset(){
+  ['arukizukan3','arukizukan2','arukids'].forEach(k=>localStorage.removeItem(k));
+  document.getElementById('resetModal').classList.remove('open');
+  location.href=location.href.split('?')[0]+'?reset='+Date.now();
+}
+function cancelReset(){
+  document.getElementById('resetModal').classList.remove('open');
+}
 
-// ======== INIT ========
+// ======= INIT =======
 if(state.settings)applySettings();
 checkLogin();
 </script>
