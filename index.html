@@ -483,6 +483,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
           <div class="chart-bars-wrap" id="chartBarsWrap">
             <div class="chart-bars" id="chartBars"></div>
           </div>
+          <!-- 右側ラベルエリア：8,000歩ラインのラベル専用 -->
+          <div id="chartRightLabel" style="width:36px;flex-shrink:0;position:relative;"></div>
         </div>
       </div>
       <div class="card">
@@ -638,6 +640,106 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   <button class="ach-close" onclick="closeAchieve()">やったー！</button>
 </div>
 
+<!-- 管理者画面 -->
+<div id="adminScreen" style="display:none;position:fixed;inset:0;z-index:900;background:var(--bg);flex-direction:column;overflow-y:auto;">
+  <div style="background:var(--surface);border-bottom:1px solid var(--border2);padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:10;">
+    <span style="font-family:var(--font-heading);font-size:0.9rem;font-weight:600;color:#E24B4A;letter-spacing:0.1em;">⚙ 管理者モード</span>
+    <button onclick="closeAdmin()" style="font-size:0.8rem;padding:0.3rem 0.85rem;border:1px solid var(--border);background:transparent;color:var(--text2);font-family:var(--font-heading);cursor:pointer;letter-spacing:0.08em;">閉じる</button>
+  </div>
+  <div style="padding:1rem;max-width:480px;margin:0 auto;width:100%;">
+
+    <!-- 現在のデータ確認 -->
+    <div class="card">
+      <div class="card-title">現在のデータ</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem;">
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:0.7rem;text-align:center;">
+          <div id="adm-pts" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:600;color:var(--accent);">0</div>
+          <div style="font-size:0.62rem;color:var(--text3);margin-top:2px;">所持ポイント</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:0.7rem;text-align:center;">
+          <div id="adm-total" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:600;color:var(--accent);">0</div>
+          <div style="font-size:0.62rem;color:var(--text3);margin-top:2px;">累計歩数</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:0.7rem;text-align:center;">
+          <div id="adm-zukan" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:600;color:var(--accent);">0</div>
+          <div style="font-size:0.62rem;color:var(--text3);margin-top:2px;">図鑑解放数</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:0.7rem;text-align:center;">
+          <div id="adm-lv" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:600;color:var(--accent);">Lv.1</div>
+          <div style="font-size:0.62rem;color:var(--text3);margin-top:2px;">冒険者レベル</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 任意日付の歩数入力 -->
+    <div class="card">
+      <div class="card-title">歩数データ入力（任意日付）</div>
+      <div style="margin-bottom:0.75rem;">
+        <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.3rem;">日付（記録対象日）</div>
+        <input type="date" id="adm-date" style="width:100%;padding:0.6rem 0.75rem;font-size:0.95rem;font-family:var(--font-body);color:var(--text);background:var(--surface2);border:1px solid var(--border);outline:none;">
+      </div>
+      <div style="margin-bottom:0.75rem;">
+        <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.3rem;">歩数</div>
+        <div style="position:relative;">
+          <input type="number" id="adm-steps" placeholder="0" min="0" max="99999" inputmode="numeric" style="width:100%;padding:0.6rem 0.75rem;font-size:1.4rem;font-weight:600;font-family:var(--font-heading);color:var(--accent);background:var(--surface2);border:1px solid var(--border);text-align:center;outline:none;appearance:none;-webkit-appearance:none;">
+          <span style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);font-size:0.8rem;color:var(--text3);">歩</span>
+        </div>
+      </div>
+      <button onclick="admSubmitSteps()" style="width:100%;padding:0.85rem;background:transparent;color:var(--accent);border:1px solid var(--accent);font-family:var(--font-heading);font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.1em;margin-bottom:0.5rem;">歩数を記録する</button>
+      <div id="adm-steps-result" style="font-size:0.75rem;color:var(--accent3);text-align:center;min-height:1.2em;"></div>
+    </div>
+
+    <!-- ポイント直接加算 -->
+    <div class="card">
+      <div class="card-title">ポイント直接加算</div>
+      <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;">
+        <input type="number" id="adm-addpts" placeholder="100" min="0" inputmode="numeric" style="flex:1;padding:0.6rem 0.75rem;font-size:1.1rem;font-weight:600;font-family:var(--font-heading);color:var(--accent);background:var(--surface2);border:1px solid var(--border);text-align:center;outline:none;appearance:none;-webkit-appearance:none;">
+        <span style="font-size:0.82rem;color:var(--text3);">pt</span>
+      </div>
+      <button onclick="admAddPts()" style="width:100%;padding:0.85rem;background:transparent;color:var(--accent);border:1px solid var(--accent);font-family:var(--font-heading);font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.1em;margin-bottom:0.5rem;">ポイントを加算する</button>
+      <div id="adm-pts-result" style="font-size:0.75rem;color:var(--accent3);text-align:center;min-height:1.2em;"></div>
+    </div>
+
+    <!-- 歩数データの削除 -->
+    <div class="card">
+      <div class="card-title">歩数データの削除</div>
+      <div style="margin-bottom:0.75rem;">
+        <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.3rem;">削除する日付</div>
+        <input type="date" id="adm-del-date" style="width:100%;padding:0.6rem 0.75rem;font-size:0.95rem;font-family:var(--font-body);color:var(--text);background:var(--surface2);border:1px solid var(--border);outline:none;">
+      </div>
+      <div id="adm-del-preview" style="font-size:0.75rem;color:var(--text2);background:var(--surface2);border:1px solid var(--border);padding:0.5rem 0.75rem;margin-bottom:0.75rem;min-height:2em;"></div>
+      <button onclick="admDeleteSteps()" style="width:100%;padding:0.85rem;background:rgba(226,75,74,0.08);color:#E24B4A;border:1px solid rgba(226,75,74,0.5);font-family:var(--font-heading);font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.1em;margin-bottom:0.5rem;">この日の歩数を削除する</button>
+      <div id="adm-del-result" style="font-size:0.75rem;color:var(--accent3);text-align:center;min-height:1.2em;"></div>
+    </div>
+
+    <!-- ポイント直接設定 -->
+    <div class="card">
+      <div class="card-title">ポイント直接設定</div>
+      <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.5rem;">現在: <b id="adm-setpts-current" style="color:var(--accent);">0</b> pt</div>
+      <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem;">
+        <input type="number" id="adm-setpts" placeholder="0" min="0" inputmode="numeric" style="flex:1;padding:0.6rem 0.75rem;font-size:1.1rem;font-weight:600;font-family:var(--font-heading);color:var(--accent);background:var(--surface2);border:1px solid var(--border);text-align:center;outline:none;appearance:none;-webkit-appearance:none;">
+        <span style="font-size:0.82rem;color:var(--text3);">pt</span>
+      </div>
+      <button onclick="admSetPts()" style="width:100%;padding:0.85rem;background:transparent;color:var(--accent);border:1px solid var(--accent);font-family:var(--font-heading);font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.1em;margin-bottom:0.5rem;">この値に設定する</button>
+      <div id="adm-setpts-result" style="font-size:0.75rem;color:var(--accent3);text-align:center;min-height:1.2em;"></div>
+    </div>
+
+    <!-- ランク別出現率 -->
+    <div class="card">
+      <div class="card-title">ランク別出現率・解放状況</div>
+      <div style="font-size:0.75rem;color:var(--text3);margin-bottom:0.75rem;">各ランクの出現率・総数・解放済み数</div>
+      <div id="adm-rates" style="font-size:0.82rem;"></div>
+    </div>
+
+    <!-- 入力履歴 -->
+    <div class="card">
+      <div class="card-title">管理者入力履歴</div>
+      <div id="adm-history" style="font-size:0.78rem;color:var(--text2);line-height:1.8;max-height:200px;overflow-y:auto;white-space:pre-line;">記録なし</div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 // ======= CHARACTER DATA =======
 const ICONS_POOL=['🐉','🦄','🔥','💎','⚡','🌊','🌙','🌟','🏔','🦋','🐺','🦊','🐦','🌺','🍄','🐙','🦑','🦈','🦁','🐯','🐻','🦝','🦡','🦦','🦥','🐸','🦎','🐊','🦕','🦖','🐬','🐋','🦭','🦅','🦆','🦉','🦚','🦜','🦩','🌵','🌴','🌿','🍀','🌾','🍁','🍂','🌸','🌼','🌻','🌹','💐','💧','❄️','🌪','🌈','⭐','☀️','🪐','🌌','🌀','🔮','💫','🧿','🗝','⚔️','🛡','🪄','🏺','🧸','🦠','🌋','🏜','⛰','🌑','🌕','☄️','🦤','🦬','🦙','🦘','🦏','🐘','🦣','🐪','🦒','🦓','🐃','🦌','🐿','🦔','🪲','🦟','🦗','🕷','🦂','🐌','🐛','🐞','🐝','🐜','🌷','🍇','🍓','🍒','🍑','🥭'];
@@ -738,6 +840,9 @@ function showMain(){
 
 // ======= TABS =======
 function showTab(name){
+  // 管理者ジェスチャー検知
+  admTabTap(name);
+
   if(name!=='gacha'){
     const r1=document.getElementById('gResult1');
     const r10=document.getElementById('gResult10');
@@ -1199,15 +1304,23 @@ function renderStats(mode){
     </div>`;
   }).join('');
 
-  // goal line — sits inside wrap, top offset = STAR_H + position within BAR_H
+  // goal line — line inside bars-wrap, label in dedicated right area (never overlaps bars)
   wrap.querySelectorAll('.goal-line').forEach(e=>e.remove());
+  const rightLabel = document.getElementById('chartRightLabel');
+  rightLabel.innerHTML = '';
   const goalTop=STAR_H+Math.round((1-Math.min(GOAL/maxSteps,1))*BAR_H);
   if(goalTop>=STAR_H&&goalTop<=STAR_H+BAR_H){
+    // ラインのみグラフ内に描画
     const gl=document.createElement('div');
     gl.className='goal-line';
-    gl.style.cssText=`position:absolute;top:${goalTop}px;left:0;right:0;border-top:1.5px dashed var(--accent3);display:flex;justify-content:flex-end;pointer-events:none;`;
-    gl.innerHTML='<span class="goal-label" style="font-size:9px;color:var(--accent3);background:var(--surface);padding:0 3px;margin-top:-9px;">8,000歩</span>';
+    gl.style.cssText=`position:absolute;top:${goalTop}px;left:0;right:0;border-top:1.5px dashed var(--accent3);pointer-events:none;`;
     wrap.insertBefore(gl,wrap.firstChild);
+    // ラベルは右側エリアに独立配置
+    rightLabel.style.cssText=`width:36px;flex-shrink:0;position:relative;height:${STAR_H+BAR_H+XLABEL_H}px;`;
+    const lbl=document.createElement('span');
+    lbl.style.cssText=`position:absolute;top:${goalTop}px;left:2px;transform:translateY(-50%);font-size:9px;color:var(--accent3);white-space:nowrap;line-height:1;`;
+    lbl.textContent='8,000歩';
+    rightLabel.appendChild(lbl);
   }
 
   // list
@@ -1261,6 +1374,172 @@ function doReset(){
 }
 function cancelReset(){
   document.getElementById('resetModal').classList.remove('open');
+}
+
+// ======= ADMIN =======
+// ジェスチャー：ガチャ×3 → ホーム → 設定 の順に5秒以内
+const ADMIN_SEQ = ['gacha','gacha','gacha','steps','settings'];
+let admSeq = [];
+let admTimer = null;
+
+function admTabTap(name){
+  // タイムアウトリセット
+  if(admTimer) clearTimeout(admTimer);
+  admTimer = setTimeout(()=>{ admSeq=[]; }, 5000);
+
+  const expected = ADMIN_SEQ[admSeq.length];
+  if(name === expected){
+    admSeq.push(name);
+    if(admSeq.length === ADMIN_SEQ.length){
+      admSeq = [];
+      clearTimeout(admTimer);
+      openAdmin();
+    }
+  } else {
+    // 先頭からやり直し（ただし今タップしたものが先頭と一致するなら1からカウント）
+    admSeq = (name === ADMIN_SEQ[0]) ? [name] : [];
+  }
+}
+
+function openAdmin(){
+  admRefresh();
+  admRenderRates();
+  document.getElementById('adm-date').value = yesterday();
+  document.getElementById('adm-del-date').value = yesterday();
+  document.getElementById('adm-steps-result').textContent = '';
+  document.getElementById('adm-pts-result').textContent = '';
+  document.getElementById('adm-del-result').textContent = '';
+  document.getElementById('adm-setpts-result').textContent = '';
+  document.getElementById('adm-del-preview').textContent = '';
+  // 削除日付変更で即プレビュー
+  document.getElementById('adm-del-date').oninput = admDelPreview;
+  admDelPreview();
+  const screen = document.getElementById('adminScreen');
+  screen.style.display = 'flex';
+}
+
+function closeAdmin(){
+  document.getElementById('adminScreen').style.display = 'none';
+  // 通常画面を再描画
+  updateUI();renderStepsScreen();renderAdventurer();renderWeeklySummary();
+  renderStats(currentStatMode);renderZukan();
+}
+
+function admRefresh(){
+  const {total, cur} = getAdventurerLevel();
+  const opened = Object.keys(state.owned).filter(id=>state.owned[id]>0).length;
+  document.getElementById('adm-pts').textContent = state.pts.toLocaleString();
+  document.getElementById('adm-total').textContent = total>=10000?(total/10000).toFixed(1)+'万':total.toLocaleString();
+  document.getElementById('adm-zukan').textContent = opened+'/500';
+  document.getElementById('adm-lv').textContent = `Lv.${cur.lv}`;
+  const spc = document.getElementById('adm-setpts-current');
+  if(spc) spc.textContent = state.pts.toLocaleString();
+}
+
+function admSubmitSteps(){
+  const dateVal = document.getElementById('adm-date').value;
+  const stepsVal = parseInt(document.getElementById('adm-steps').value)||0;
+  if(!dateVal){ document.getElementById('adm-steps-result').textContent='日付を入力してください'; return; }
+  if(stepsVal<0){ document.getElementById('adm-steps-result').textContent='歩数は0以上で入力してください'; return; }
+
+  // 同日に既存データがある場合は先にポイントを返還
+  const existing = state.stepHistory[dateVal];
+  if(existing){
+    const refundPts = Math.floor(existing/10) + (existing>8000?100:0);
+    state.pts = Math.max(0, state.pts - refundPts);
+  }
+
+  const pts = Math.floor(stepsVal/10);
+  const bonus = stepsVal>8000?100:0;
+  state.stepHistory[dateVal] = stepsVal;
+  state.pts += pts+bonus;
+  save();
+
+  admAddHistory(`${dateVal}：${stepsVal.toLocaleString()}歩 → +${pts+bonus}pt${bonus?' (ボーナス含)':''}${existing?' (上書き)':''}`);
+  document.getElementById('adm-steps-result').textContent =
+    `✓ ${dateVal} に ${stepsVal.toLocaleString()}歩 を記録しました（+${pts+bonus}pt）`;
+  document.getElementById('adm-steps').value='';
+  admRefresh();
+}
+
+function admAddPts(){
+  const val = parseInt(document.getElementById('adm-addpts').value)||0;
+  if(val<=0){ document.getElementById('adm-pts-result').textContent='1以上のポイントを入力してください'; return; }
+  state.pts += val;
+  save();
+  admAddHistory(`ポイント直接加算：+${val}pt`);
+  document.getElementById('adm-pts-result').textContent = `✓ ${val}pt を加算しました（合計 ${state.pts.toLocaleString()}pt）`;
+  document.getElementById('adm-addpts').value='';
+  admRefresh();
+}
+
+function admDelPreview(){
+  const dateVal = document.getElementById('adm-del-date').value;
+  const prev = document.getElementById('adm-del-preview');
+  if(!dateVal){ prev.textContent='日付を選択すると記録を確認できます'; return; }
+  const steps = state.stepHistory[dateVal];
+  if(!steps){ prev.textContent=`${dateVal} の記録なし`; return; }
+  const pts = Math.floor(steps/10);
+  const bonus = steps>8000?100:0;
+  prev.textContent=`${dateVal}：${steps.toLocaleString()}歩 → 削除時に ${pts+bonus}pt を返還（歩数${pts}pt${bonus?'＋ボーナス'+bonus+'pt':''}）`;
+}
+
+function admDeleteSteps(){
+  const dateVal = document.getElementById('adm-del-date').value;
+  if(!dateVal){ document.getElementById('adm-del-result').textContent='日付を選択してください'; return; }
+  const steps = state.stepHistory[dateVal];
+  if(!steps){ document.getElementById('adm-del-result').textContent=`${dateVal} の記録はありません`; return; }
+  const pts = Math.floor(steps/10);
+  const bonus = steps>8000?100:0;
+  const refund = pts+bonus;
+  state.pts = Math.max(0, state.pts-refund);
+  delete state.stepHistory[dateVal];
+  save();
+  admAddHistory(`歩数削除 ${dateVal}：${steps.toLocaleString()}歩 → -${refund}pt返還`);
+  document.getElementById('adm-del-result').textContent=`✓ ${dateVal} の記録を削除し、${refund}pt を返還しました`;
+  document.getElementById('adm-del-preview').textContent='';
+  admRefresh();
+}
+
+function admSetPts(){
+  const val = parseInt(document.getElementById('adm-setpts').value);
+  if(isNaN(val)||val<0){ document.getElementById('adm-setpts-result').textContent='0以上の値を入力してください'; return; }
+  const before = state.pts;
+  state.pts = val;
+  save();
+  admAddHistory(`ポイント直接設定：${before}pt → ${val}pt`);
+  document.getElementById('adm-setpts-result').textContent=`✓ ${before.toLocaleString()}pt → ${val.toLocaleString()}pt に設定しました`;
+  document.getElementById('adm-setpts').value='';
+  admRefresh();
+}
+
+function admRenderRates(){
+  const el = document.getElementById('adm-rates');
+  const rankColors = {SS:'#DAA520',S:'#9060D0',A:'#C05020',B:'#1080C0',C:'#208050',D:'#808090'};
+  const maxRate = Math.max(...Object.values(RANK_RATES));
+  el.innerHTML = RANKS.map(r=>{
+    const pct = (RANK_RATES[r]*100).toFixed(0);
+    const charTotal = CHARS.filter(c=>c.rank===r).length;
+    const charOpen = CHARS.filter(c=>c.rank===r&&(state.owned[c.id]||0)>0).length;
+    const barW = Math.round(RANK_RATES[r]/maxRate*100);
+    return `<div style="margin-bottom:0.65rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+        <span style="font-family:var(--font-heading);font-size:0.82rem;font-weight:600;color:${rankColors[r]};">${r}ランク</span>
+        <span style="font-size:0.75rem;color:var(--text2);">${pct}% ／ ${charTotal}体中 ${charOpen}体解放</span>
+      </div>
+      <div style="background:var(--surface2);height:6px;border:1px solid var(--border);overflow:hidden;">
+        <div style="height:100%;width:${barW}%;background:${rankColors[r]};opacity:0.7;"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+let admHistoryLog = [];
+function admAddHistory(text){
+  const now = new Date();
+  const ts = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  admHistoryLog.unshift(`[${ts}] ${text}`);
+  admHistoryLog = admHistoryLog.slice(0,30);
+  document.getElementById('adm-history').textContent = admHistoryLog.join('\n') || '記録なし';
 }
 
 // ======= INIT =======
