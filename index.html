@@ -1231,8 +1231,8 @@ function renderStats(mode){
   let chartData=[];let listData=[...entries].reverse();const now=new Date();
 
   if(mode==='day'){
-    document.getElementById('chartTitle').textContent='直近14日';
-    for(let i=13;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const key=localDateStr(d);chartData.push({label:fmtDate(key),steps:history[key]||0,key});}
+    document.getElementById('chartTitle').textContent='直近7日';
+    for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);const key=localDateStr(d);chartData.push({label:fmtDate(key),steps:history[key]||0,key});}
   }else if(mode==='week'){
     document.getElementById('chartTitle').textContent='週別合計（直近8週）';
     const wm={};entries.forEach(([date,steps])=>{const d=new Date(date+'T00:00:00');const mn=new Date(d);mn.setDate(d.getDate()-((d.getDay()+6)%7));const wk=localDateStr(mn);wm[wk]=(wm[wk]||0)+steps;});
@@ -1268,7 +1268,7 @@ function renderStats(mode){
   const XLABEL_H=20;
   const maxSteps=Math.max(...chartData.map(d=>d.steps),GOAL,1);
   // ensure at least 8 columns so bars don't stretch too wide when data is sparse
-  const MIN_COLS=8;
+  const MIN_COLS=7;
   if(chartData.length<MIN_COLS){
     const pad=MIN_COLS-chartData.length;
     for(let i=0;i<pad;i++)chartData.unshift({label:'',steps:0,key:'_pad'+i,pad:true});
@@ -1296,7 +1296,6 @@ function renderStats(mode){
     const h=Math.max(Math.round((d.steps/maxSteps)*BAR_H),d.steps>0?2:0);
     const achieved=d.steps>=GOAL;
     // ⭐ sits ABOVE the bar area in the STAR_H zone, via negative margin from bar top
-    const starOffset=BAR_H-h; // px from bottom of bar area to bar top
     return `<div class="bar-col" style="flex:1;min-width:0;position:relative;display:flex;flex-direction:column;justify-content:flex-end;">
       ${achieved?`<div class="bar-star" style="position:absolute;bottom:${h+XLABEL_H}px;left:0;right:0;text-align:center;font-size:10px;line-height:1">⭐</div>`:''}
       <div class="bar-fill${achieved?' achieved':''}" style="height:${h}px;width:100%;border-radius:3px 3px 0 0;"></div>
@@ -1377,15 +1376,14 @@ function cancelReset(){
 }
 
 // ======= ADMIN =======
-// ジェスチャー：ガチャ×3 → ホーム → 設定 の順に5秒以内
-const ADMIN_SEQ = ['gacha','gacha','gacha','steps','settings'];
+// ジェスチャー：ガチャ → ホーム → ガチャ → ホーム → 設定 の順に8秒以内
+const ADMIN_SEQ = ['gacha','steps','gacha','steps','settings'];
 let admSeq = [];
 let admTimer = null;
 
 function admTabTap(name){
-  // タイムアウトリセット
   if(admTimer) clearTimeout(admTimer);
-  admTimer = setTimeout(()=>{ admSeq=[]; }, 5000);
+  admTimer = setTimeout(()=>{ admSeq=[]; }, 8000);
 
   const expected = ADMIN_SEQ[admSeq.length];
   if(name === expected){
@@ -1393,10 +1391,11 @@ function admTabTap(name){
     if(admSeq.length === ADMIN_SEQ.length){
       admSeq = [];
       clearTimeout(admTimer);
+      admTimer = null;
       openAdmin();
     }
   } else {
-    // 先頭からやり直し（ただし今タップしたものが先頭と一致するなら1からカウント）
+    // 間違えたら完全リセット。ただしその操作がシーケンス先頭と一致する場合は1から再カウント
     admSeq = (name === ADMIN_SEQ[0]) ? [name] : [];
   }
 }
@@ -1410,12 +1409,8 @@ function openAdmin(){
   document.getElementById('adm-pts-result').textContent = '';
   document.getElementById('adm-del-result').textContent = '';
   document.getElementById('adm-setpts-result').textContent = '';
-  document.getElementById('adm-del-preview').textContent = '';
-  // 削除日付変更で即プレビュー
-  document.getElementById('adm-del-date').oninput = admDelPreview;
   admDelPreview();
-  const screen = document.getElementById('adminScreen');
-  screen.style.display = 'flex';
+  document.getElementById('adminScreen').style.display = 'flex';
 }
 
 function closeAdmin(){
@@ -1544,6 +1539,8 @@ function admAddHistory(text){
 
 // ======= INIT =======
 if(state.settings)applySettings();
+// 管理者画面：削除プレビューのイベントは1回だけ登録
+document.getElementById('adm-del-date').addEventListener('input', admDelPreview);
 checkLogin();
 </script>
 </body>
